@@ -5,13 +5,19 @@ import NavBar from "./componentes/navBar"
 import { SideBar } from "./componentes/sideBar"
 import { Svgs } from "./assets/assets"
 import { SidebarItem } from "./componentes/sideBarItems"
+import { SidebarProvider } from "./contexto/sideBar/sideBarProvider"
+import { AuthProvider } from "./contexto/auth/AuthProvider"
+
+
 
 export const App = () => {
   const cliente = new QueryClient()
 
   return (
     <QueryClientProvider client={cliente}>
-      <BrowserRouter>
+    <AuthProvider>
+    <BrowserRouter>
+      <SidebarProvider>
         <NavBar />
         <div className="pt-16 h-screen flex bg-black text-gray-100">
           <SideBar>
@@ -20,13 +26,16 @@ export const App = () => {
             <SidebarItem icon={Svgs.comunidade} text="Comunidades" link="/comunidades" />
             <SidebarItem icon={Svgs.criarComunidade} text="Criar Comunidades" link="/comunidade/criar" />
           </SideBar>
+
           <main className="flex-1 overflow-y-auto">
             <Routes>
               <Route path="/" element={<Home />} />
             </Routes>
           </main>
         </div>
-      </BrowserRouter>
+      </SidebarProvider>
+    </BrowserRouter>
+    </AuthProvider>
     </QueryClientProvider>
   )
 }

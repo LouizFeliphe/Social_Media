@@ -1,6 +1,6 @@
 import { NavLink } from "react-router";
-import { useContext } from "react";
-import { sideBarContext } from "../contexto/sideBarContext";
+import { useSidebar } from "../contexto/sideBar/useSideBar";
+
 
 export const SidebarItem = ({ icon, text, link, alert, }: {
     icon: string
@@ -9,13 +9,7 @@ export const SidebarItem = ({ icon, text, link, alert, }: {
     alert?: boolean
 }) => {
 
-    const context = useContext(sideBarContext)
-
-    if (!context) {
-        throw new Error("SidebarItem deve ser usado dentro de SideBar")
-    }
-
-    const { expandir } = context
+    const {expandir} = useSidebar()
 
     return (
         <li className="W-full py-2  px-3 my-1 font-medium rounded-md cursor-pointer">
@@ -34,7 +28,7 @@ export const SidebarItem = ({ icon, text, link, alert, }: {
                 <img src={icon} alt="icone" className="h-4 w-4 shrink-0 invert" />
 
                 <span
-                    className={`overflow-hidden transition-all ${expandir ? "w-52 ml-3" : "w-0"
+                    className={`overflow-hidden transition-all duration-100 ${expandir ? "w-52 ml-3" : "w-0"
                         }`}
                 >
                     {text}
