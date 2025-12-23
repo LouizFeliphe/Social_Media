@@ -1,5 +1,5 @@
 import { NavLink } from "react-router";
-import { useSidebar } from "../contexto/sideBar/useSideBar";
+import { useSidebar } from "../../contexto/sideBar/useSideBar";
 
 
 export const SidebarItem = ({ icon, text, link, alert, }: {

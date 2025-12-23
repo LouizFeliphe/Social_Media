@@ -9,6 +9,8 @@ import comunidade from './comunidade.svg'
 import criarComunidade from './criarComunidade.svg'
 import post from './post.svg'
 import pesquisarIcone from './search.svg'
+import user from './user.svg'
+import fotoIcone from './fotoIcone.svg'
 
 export const Svgs = {
     menu: menu,
@@ -21,5 +23,7 @@ export const Svgs = {
     comunidade: comunidade,
     criarComunidade: criarComunidade,
     post: post,
-    pesquisarIcone: pesquisarIcone
+    pesquisarIcone: pesquisarIcone,
+    user: user,
+    fotoIcone: fotoIcone,
 }

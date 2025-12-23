@@ -1,12 +1,14 @@
 import { BrowserRouter, Route, Routes } from "react-router"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import Home from "./paginas/home"
-import NavBar from "./componentes/navBar"
-import { SideBar } from "./componentes/sideBar"
+import NavBar from "./componentes/navBar/navBar"
 import { Svgs } from "./assets/assets"
-import { SidebarItem } from "./componentes/sideBarItems"
 import { SidebarProvider } from "./contexto/sideBar/sideBarProvider"
 import { AuthProvider } from "./contexto/auth/AuthProvider"
+import CriarPost from "./paginas/criarPost"
+import { PostPage } from "./paginas/PostPage"
+import { SidebarItem } from "./componentes/sideBar/sideBarItems"
+import { SideBar } from "./componentes/sideBar/sideBar"
 
 
 
@@ -30,6 +32,8 @@ export const App = () => {
           <main className="flex-1 overflow-y-auto">
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/criar" element={<CriarPost/>}/>
+              <Route path="/post/:id" element={<PostPage/>}/>
             </Routes>
           </main>
         </div>

@@ -1,6 +1,7 @@
-import { Svgs } from "../assets/assets"
 import { type ReactNode } from "react";
-import { useSidebar } from "../contexto/sideBar/useSideBar";
+import { Svgs } from "../../assets/assets";
+import { useSidebar } from "../../contexto/sideBar/useSideBar";
+import { useAuth } from "../../contexto/auth/useAuth";
 
 
 export const SideBar = ({ children }: {
@@ -8,7 +9,14 @@ export const SideBar = ({ children }: {
 }) => {
 
     const { expandir, toggle } = useSidebar()
+    const { usuario, signInWithGoogle } = useAuth()
 
+    const mostrarNome = usuario?.user_metadata.name
+    const mostrarEmail = usuario?.email
+    const fotoPerfil = usuario?.user_metadata.avatar_url
+    console.log("perfil: "+ fotoPerfil);
+    
+    
 
     return (
         <>
@@ -46,15 +54,20 @@ export const SideBar = ({ children }: {
                     <ul className="flex-1 px-3">{children}</ul>
 
                     <div className="border-t flex p-3 mx-auto">
-                        <img src={Svgs.menu} alt="item" className="h-10 rounded-md invert" />
+                    
+                        <img src={fotoPerfil ?? Svgs.user} alt="item" className={`h-10 w-10 rounded-full object-cover ${fotoPerfil ?? "invert"}`} />
                         <div className={`flex justify-between items-center overflow-hidden transition-all duration-700 ${expandir ? "w-52 ml-3" : "w-0"}`}>
 
+                            { mostrarNome ? 
+                            <>
                             <div>
-                                <h4 className="font-semibold text-white">John Doe</h4>
-                                <span className="text-xs text-white">johdowe@gmail.com</span>
+                                <h4 className="font-semibold text-white">{mostrarNome}</h4>
+                                <span className="text-xs text-white">{mostrarEmail}</span>
                             </div>
 
-                            <img src={Svgs.mais} alt="mais" className="h-9 invert cursor-pointer" />
+                            <img src={Svgs.mais} alt="mais" className="h-9 invert cursor-pointer" /> 
+                            </>
+                            : <div className="cursor-pointer" onClick={signInWithGoogle}><h4 className="font-semibold text-white">Desconhecido</h4><span className="text-xs text-white">Log-in</span></div>}
                         </div>
                     </div>
 

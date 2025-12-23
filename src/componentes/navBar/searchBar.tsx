@@ -1,4 +1,4 @@
-import { Svgs } from "../assets/assets"
+import { Svgs } from "../../assets/assets"
 
 
 const SearchBar = () =>{
