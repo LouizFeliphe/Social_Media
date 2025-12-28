@@ -11,8 +11,9 @@ interface PostInput {
     avatar_url: string | null,
 }
 
-const Post = async (post: PostInput, imageFile: File) => {
+const Post = async (post: PostInput, imageFile: File | null) => {
 
+    if(imageFile){
     const filePath = `${post.titulo}-${Date.now()}-${imageFile.name}`
 
     const { error: uploadError } = await supabase.storage.from("post-images").upload(filePath, imageFile)
@@ -24,7 +25,16 @@ const Post = async (post: PostInput, imageFile: File) => {
     const { data, error } = await supabase.from("posts").insert({ ...post, image_url: publicUrlData.publicUrl})
     if (error) throw new Error(error.message)
 
-    return data
+        return data
+    }
+
+    else{
+
+        const { data, error } = await supabase.from("posts").insert({ ...post, image_url: null})
+        if (error) throw new Error(error.message)
+
+        return data
+    }
 
 }
 
@@ -38,13 +48,13 @@ const CriarPost = () => {
     // const [fileError, setFileError] = useState<string | null>(null);
     const {usuario} = useAuth()
 
-    const { mutate, isError, isPending } = useMutation({ mutationFn: (data: { post: PostInput, imageFile: File }) => Post(data.post, data.imageFile) })
+    const { mutate, isError, isPending } = useMutation({ mutationFn: (data: { post: PostInput, imageFile: File | null }) => Post(data.post, data.imageFile) })
 
     const HandleSubmit = (event: React.FormEvent) => {
 
         event.preventDefault()
 
-        if (!imageFile) return;
+       
         mutate({ post: { titulo, conteudo, avatar_url: usuario?.user_metadata.avatar_url || null}, imageFile: imageFile })
 
 
@@ -150,13 +160,13 @@ const CriarPost = () => {
                                             className="relative cursor-pointer rounded-md bg-transparent font-semibold text-indigo-400 focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-indigo-500 hover:text-indigo-300"
                                         >
                                             <span className="underline">Envie um arquivo</span>
-                                            <input id="file-upload" name="file-upload" type="file" accept="image/*" className="sr-only" required
+                                            <input id="file-upload" name="file-upload" type="file" accept="image/*" className="sr-only" 
                                                 onChange={handleFileChange}
                                             />
                                         </label>
                                         <p className="pl-1">clicando <span className="font-semibold text-indigo-400">lá</span> 👈 !</p>
                                     </div>
-                                    <p className="text-xs/5 text-gray-400">PNG, JPG ou JPEG de até 10MB</p>
+                                    <p className="text-xs/5 text-gray-400">PNG, JPG ou JPEG são ideais</p>
                                 </div>
                             </div>
                             <button  className={`group px-8 py-2.5 my-10 rounded-lg text-white

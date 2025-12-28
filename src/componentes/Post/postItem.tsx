@@ -38,7 +38,7 @@ const PostItem = ({post}: Props) => {
           {/* Banner da imagem */}
           <div className="mt-4 flex-1">
             <img
-              src={post.image_url}
+              src={post.image_url ? post.image_url : Svgs.anarchy}
               alt={post.titulo}
               className="w-full rounded-[20px] object-cover max-h-[150px] mx-auto my-auto"
             />

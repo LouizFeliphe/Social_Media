@@ -11,6 +11,10 @@ import post from './post.svg'
 import pesquisarIcone from './search.svg'
 import user from './user.svg'
 import fotoIcone from './fotoIcone.svg'
+import coracao from './coracao.svg'
+import coracaoQuebrado from './coracaoQuebrado.svg'
+import anarchy from './posterPadrao.png'
+
 
 export const Svgs = {
     menu: menu,
@@ -26,4 +30,7 @@ export const Svgs = {
     pesquisarIcone: pesquisarIcone,
     user: user,
     fotoIcone: fotoIcone,
+    coracao: coracao,
+    coracaoQuebrado: coracaoQuebrado,
+    anarchy: anarchy,
 }

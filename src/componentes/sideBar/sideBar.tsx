@@ -14,7 +14,6 @@ export const SideBar = ({ children }: {
     const mostrarNome = usuario?.user_metadata.name
     const mostrarEmail = usuario?.email
     const fotoPerfil = usuario?.user_metadata.avatar_url
-    console.log("perfil: "+ fotoPerfil);
     
     
 
