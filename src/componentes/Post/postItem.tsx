@@ -1,12 +1,10 @@
 import { Link } from "react-router"
-import type { Post } from "./PostList"
 import { Svgs } from "../../assets/assets";
+import type { Post } from "./interface";
 
-interface Props {
-    post: Post
-}
-
-const PostItem = ({post}: Props) => {
+const PostItem = ({post}: {
+  post: Post
+}) => {
 
     return(
         <div className="relative group" >

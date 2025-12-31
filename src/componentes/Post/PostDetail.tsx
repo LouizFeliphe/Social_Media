@@ -1,32 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "../../supabase";
-import type { Post } from "./PostList";
 import {LikeBotao} from "./likebotao";
 import { Svgs } from "../../assets/assets";
-import { Comentarios } from "./Comentarios";
-
-
-
-interface Props {
-  postId: number;
-}
-
-const fetchPostById = async (id: number): Promise<Post> => {
-  const { data, error } = await supabase
-    .from("posts")
-    .select("*")
-    .eq("id", id)
-    .single();
-
-  if (error) throw new Error(error.message);
-
-  return data as Post;
-};
+import { Comentarios } from "../Comentario/Comentarios";
+import type { Post, Props } from "./interface";
+import { FetchPostById } from "../backend/Get";
 
 export const PostDetail = ({ postId }: Props) => {
   const { data, error, isLoading } = useQuery<Post, Error>({
     queryKey: ["post", postId],
-    queryFn: () => fetchPostById(postId),
+    queryFn: () => FetchPostById(postId),
   });
 
   if (isLoading) {

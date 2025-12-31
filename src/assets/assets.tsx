@@ -14,6 +14,7 @@ import fotoIcone from './fotoIcone.svg'
 import coracao from './coracao.svg'
 import coracaoQuebrado from './coracaoQuebrado.svg'
 import anarchy from './posterPadrao.png'
+import sitelogo from './site_logo.svg'
 
 
 export const Svgs = {
@@ -33,4 +34,5 @@ export const Svgs = {
     coracao: coracao,
     coracaoQuebrado: coracaoQuebrado,
     anarchy: anarchy,
+    sitelogo: sitelogo,
 }
