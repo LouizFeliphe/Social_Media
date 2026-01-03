@@ -17,7 +17,7 @@ const PostList = () =>{
     }
 
     return (
-        <div className="flex flex-wrap gap-6 justify-center">
+        <div className="flex flex-col gap-7 justify-center items-center">
             {data?.map((post, key)=>
                 <PostItem post={post} key={key}/>
             )}

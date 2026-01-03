@@ -11,6 +11,7 @@ export interface Comentario {
     author: string | null,
     pai_comentario_id: number | null,
     created_at?: string,
+    avatar_url?: string,
 }
 
 export type ComentarioArvore = (Comentario & {children?: Comentario[]})

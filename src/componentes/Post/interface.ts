@@ -16,6 +16,8 @@ export interface Post{
     created_at: string,
     image_url: string,
     avatar_url: string,
+    nome: string,
+    email: string,
 
 }
 

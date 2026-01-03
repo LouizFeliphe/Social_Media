@@ -4,7 +4,7 @@ import type { Like, Post } from "../Post/interface"
 
 export const ReceberComentarios = async (postId: number) : Promise<Comentario[]> => {
 
-    const {data, error} = await supabase.from("comentarios").select("*").eq("post_id", postId).order("created_at", {ascending: true})
+    const {data, error} = await supabase.from("comentarios").select("*").eq("post_id", postId).order("created_at", {ascending: false})
 
     if(error) throw new Error("Aconteceu um erro no fetch")
         

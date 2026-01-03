@@ -1,56 +1,63 @@
 import { Link } from "react-router"
-import { Svgs } from "../../assets/assets";
 import type { Post } from "./interface";
+import { Svgs } from "../../assets/assets";
+import { useQuery } from "@tanstack/react-query";
+import { ReceberComentarios } from "../backend/Get";
+import type { Comentario } from "../Comentario/interface";
+import { useAuth } from "../../contexto/auth/useAuth";
 
-const PostItem = ({post}: {
+
+const PostItem = ({ post }: {
   post: Post
 }) => {
 
-    return(
-        <div className="relative group" >
-      <div className="absolute -inset-1 rounded-[20px] bg-gradient-to-r from-pink-600 to-purple-600 blur-sm opacity-0 group-hover:opacity-50 transition duration-300 pointer-events-none"></div>
-      <Link to={`/post/${post.id}`} className="block relative z-10">
-        <div className="w-80 h-76 bg-[rgb(24,27,32)] border border-[rgb(84,90,106)] rounded-[20px] text-white flex flex-col p-5 overflow-hidden transition-colors duration-300 group-hover:bg-gray-800">
-          {/* Cabeçalho: Avatar e Título */}
-          <div className="flex items-center space-x-2">
-            {post?.avatar_url && post.avatar_url !== null ? (
-              <img
-                src={post.avatar_url}
-                alt="usuario-foto"
-                className="w-[35px] h-[35px] rounded-full object-cover"
-              />
-            ) : (
-              <img
-                src={Svgs.user}
-                alt="usuario-foto"
-                className="w-[35px] h-[35px] rounded-full object-cover invert"
-              />
-            )}
-            <div className="flex flex-col flex-1">
-              <div className="text-[20px] leading-[22px] font-semibold mt-2">
-                {post.titulo}
-              </div>
-            </div>
-          </div>
+  const {usuario} = useAuth()
+  const {data: comentariosFetch, error: erroFetch, isLoading} = useQuery<Comentario[]>({queryFn: () => ReceberComentarios(post.id), queryKey: ["comentarios", post.id]})
 
-          {/* Banner da imagem */}
-          <div className="mt-4 flex-1">
-            <img
-              src={post.image_url ? post.image_url : Svgs.anarchy}
-              alt={post.titulo}
-              className="w-full rounded-[20px] object-cover max-h-[150px] mx-auto my-auto"
-            />
+
+  const comentariosQuantidade = comentariosFetch?.length ;
+  const userComentario = comentariosFetch?.find((c) => c.user_id === usuario?.id);
+  const fotoPerfil = post?.avatar_url
+
+  return (
+    <div className="w-[100%] p-5">
+
+      <Link to={`/post/${post.id}`} className="" >
+      <div className="flex gap-3">
+        <img src={fotoPerfil ?? Svgs.user} alt="item" className={`h-15 w-15 rounded-full object-cover ${fotoPerfil ?? "invert"}`} />
+        <div className="flex flex-col gap-2">
+          <div className="flex max-sm:flex-col items-center gap-2">
+            <span className="font-bold text-md  sm:text-xl">UrsopolarAgiota</span>
+            <span className="font-light text-md text-gray-300">@Sfaygam</span>
+            <span className="text-md sm:text-xl font-light text-gray-300 hidden sm:block">{new Date(post.created_at).toLocaleString()}</span>
           </div>
-          <div className="flex justify-around items-center">
-            <span className="cursor-pointer h-10 w-[50px] px-1 flex items-center justify-center font-extrabold rounded-lg">
-              ❤️ <span className="ml-2">{}</span>
-            </span>
-            <span className="cursor-pointer h-10 w-[50px] px-1 flex items-center justify-center font-extrabold rounded-lg">
-              💬 <span className="ml-2">{}</span>
-            </span>
-          </div>
+          <p className="text-md leading-8 sm:text-xl font-extralight ">{post?.conteudo}</p>
+
         </div>
+
+      </div>
       </Link>
+      {post?.image_url && (<div>
+        <img src={post.image_url} alt="imagem" className="max-w-[80%] max-h-[550px] rounded-[20px] object-cover ml-18 mt-10 mb-10" />
+      </div>)}
+      <div className="flex items-center justify-center gap-15">
+        <button className={`group px-5 py-2 rounded-lg 
+          cursor-pointer active:scale-95 transition duration-300 bg-indigo-600
+          `}>
+          <p className="relative overflow-hidden">
+            <span className="block transition-transform duration-300 group-hover:-translate-y-full flex items-center gap-3">{`${comentariosQuantidade} `}<img src={Svgs.comentario} alt="comentario" className="h-4 invert" /></span>
+            <span className="absolute w-full top-full left-1/2 -translate-x-1/2 block transition-transform duration-300 group-hover:translate-y-[-100%] flex items-center gap-3">{`${comentariosQuantidade !== undefined ? comentariosQuantidade + 1 : comentariosQuantidade} `}<img src={Svgs.comentario} alt="comentario" className="h-4" /></span>
+          </p>
+        </button>
+        <button className={`group px-5 py-2 rounded-lg 
+          cursor-pointer active:scale-95 transition duration-300 bg-indigo-600
+          `}>
+          <p className="relative overflow-hidden">
+            <span className="block transition-transform duration-300 group-hover:-translate-y-full"><img src={Svgs.like} alt="comentario" className="h-4 invert" /></span>
+            <span className="absolute w-full top-full left-1/2 -translate-x-1/2 block transition-transform duration-300 group-hover:translate-y-[-100%]"><img src={Svgs.like} alt="comentario" className="h-4" /></span>
+          </p>
+        </button>
+      </div>
     </div>
   );
 

@@ -15,6 +15,13 @@ import coracao from './coracao.svg'
 import coracaoQuebrado from './coracaoQuebrado.svg'
 import anarchy from './posterPadrao.png'
 import sitelogo from './site_logo.svg'
+import abrirComentario from './abir.svg'
+import fecharComentario from './fechar.svg'
+import lixo from './lixo.svg'
+import editar from './editar.svg'
+import gif from './gif.svg'
+import comentario from './comentario.svg'
+import like from './like.svg'
 
 
 export const Svgs = {
@@ -35,4 +42,11 @@ export const Svgs = {
     coracaoQuebrado: coracaoQuebrado,
     anarchy: anarchy,
     sitelogo: sitelogo,
+    abrirComentario: abrirComentario,
+    fecharComentario: fecharComentario,
+    lixo: lixo,
+    editar: editar,
+    gif: gif,
+    comentario: comentario,
+    like: like,
 }

@@ -9,6 +9,7 @@ import CriarPost from "./paginas/criarPost"
 import { PostPage } from "./paginas/PostPage"
 import { SidebarItem } from "./componentes/sideBar/sideBarItems"
 import { SideBar } from "./componentes/sideBar/sideBar"
+import { ScrollToTop } from "./paginas/Scroll"
 
 
 
@@ -30,6 +31,7 @@ export const App = () => {
           </SideBar>
 
           <main className="flex-1 overflow-y-auto">
+            <ScrollToTop/>
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/criar" element={<CriarPost/>}/>

@@ -29,7 +29,7 @@ export const CriarPostBackend = async (post: PostInput, imageFile: File | null) 
 
 }
 
-export const EnviarComentario = async ({post_id, conteudo, user_id, author, pai_comentario_id}: Comentario): Promise<void> =>{
+export const EnviarComentario = async ({post_id, conteudo, user_id, author, pai_comentario_id, avatar_url}: Comentario): Promise<void> =>{
 
     if(!user_id || !author) {
         console.log(user_id, author);
@@ -41,7 +41,8 @@ export const EnviarComentario = async ({post_id, conteudo, user_id, author, pai_
         conteudo,
         user_id,
         author, 
-        pai_comentario_id
+        pai_comentario_id,
+        avatar_url
     })
 
     if( error ) throw new Error("Aconteceu um erro ao enviar")
@@ -80,3 +81,13 @@ export const Vote = async (likeValue: number, postId: number, userId: string) =>
     if (error) throw new Error(error.message);
   }
 };
+
+export const EditarComentario = async (comentarioEditado: string, idComentario: number) => {
+
+   const { error } = await supabase
+        .from("comentarios")
+        .update({ conteudo: comentarioEditado })
+        .eq("id", idComentario);
+
+  if (error) throw new Error(error.message);
+}

@@ -26,7 +26,7 @@ export const Comentarios = ({postId}: Props) => {
 
         e.preventDefault()     
 
-        mutate({post_id: postId, conteudo: comentario, user_id: usuario?.id || null, author: usuario?.user_metadata.name || null, pai_comentario_id: null})     
+        mutate({post_id: postId, conteudo: comentario, user_id: usuario?.id || null, author: usuario?.user_metadata.name || null, pai_comentario_id: null, avatar_url: usuario?.user_metadata.avatar_url || null})     
     }
 
     const ConstrutorComentario = (comentarios: Comentario[]): ComentarioArvore[] =>{
@@ -54,18 +54,21 @@ export const Comentarios = ({postId}: Props) => {
     const comentariosPagina: ComentarioArvore[] = comentariosFetch ? ConstrutorComentario(comentariosFetch) : [] 
 
     return (
-        <div> 
-            <form onSubmit={handleSubmit}>
-            <label htmlFor="comentario">Comentario</label>
-            <textarea id="comentario" rows={4} required onChange={(e)=>{
+        <div className="w-[90%]"> 
+            <form onSubmit={handleSubmit} className="mb-5 p-4">
+            <div className="flex flex-col justify-center">
+                <label htmlFor="comentario" className="mb-3">Enviar Comentario</label>
+            <textarea id="comentario" rows={4} required className="p-3" placeholder="Escreva..." onChange={(e)=>{
                 setComentario(e.target.value)
             }}/>
-            <button>Enviar comentario</button>
+            </div>
+            
+            <button className="flex items-center justify-center rounded-md bg-indigo-600 p-2 mt-3 w-26 h-8 cursor-pointer hover:bg-indigo-700">Enviar</button>
             </form>
             {isPending || isLoading && (<span>Carregando...</span>)}
             {error && (<span>Erro, {error.message}</span>)}
             {erroFetch && (<span>Erro, {erroFetch.message}</span>)}
-            <div>{comentariosPagina.map((comentario,key)=>{
+            <div className="space-y-5">{comentariosPagina.map((comentario,key)=>{
                 return (
                     <ComentarioItem comentario={comentario} key={key} postId={postId}/>
                 )
