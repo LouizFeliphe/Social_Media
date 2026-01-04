@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query"
-import PostItem from "./postItem"
+import PostItem from "./postItem.tsx"
 import { FetchPosts } from "../backend/Get"
 import type { Post } from "./interface"
 
@@ -17,7 +17,7 @@ const PostList = () =>{
     }
 
     return (
-        <div className="flex flex-col gap-7 justify-center items-center">
+        <div className="flex flex-col gap-7 justify-center items-center mt-5">
             {data?.map((post, key)=>
                 <PostItem post={post} key={key}/>
             )}

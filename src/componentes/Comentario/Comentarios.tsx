@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useAuth } from "../../contexto/auth/useAuth"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import ComentarioItem from "./ComentarioItem"
+import {ComentarioItem} from "./ComentarioItem"
 import type { Comentario, ComentarioArvore, Props } from "./interface"
 import { EnviarComentario } from "../backend/Post"
 import { ReceberComentarios } from "../backend/Get"

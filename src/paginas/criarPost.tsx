@@ -1,30 +1,18 @@
-import { useMutation } from "@tanstack/react-query"
 import { useState } from "react"
 import { Svgs } from "../assets/assets"
-import { useAuth } from "../contexto/auth/useAuth"
-import { CriarPostBackend } from "../componentes/backend/Post"
-import type { PostInput } from "../componentes/Post/interface"
-
-// const MAX_SIZE = 15 * 1024 * 1024;
+import { EnviarPost } from "../componentes/Post/CriarPost/EnviarPost"
 
 const CriarPost = () => {
-
     const [titulo, setTitulo] = useState<string>("")
     const [conteudo, setConteudo] = useState<string>("")
     const [imageFile, setImageFile] = useState<File | null>(null);
-    // const [fileError, setFileError] = useState<string | null>(null);
-    const { usuario } = useAuth()
+   
+    const MutateOptionsBackend = EnviarPost({titulo, conteudo, imageFile})
 
-    const { mutate, isError, isPending } = useMutation({ mutationFn: (data: { post: PostInput, imageFile: File | null }) => CriarPostBackend(data.post, data.imageFile) })
-
-    const HandleSubmit = (event: React.FormEvent) => {
-
+    const handleSubmit = (event: React.FormEvent) =>{
         event.preventDefault()
-
-
-        mutate({ post: { titulo, conteudo, avatar_url: usuario?.user_metadata.avatar_url || null }, imageFile: imageFile })
-
-
+        MutateOptionsBackend.IniciarEnvio()
+        if(!MutateOptionsBackend.isError) setConteudo("")
     }
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -39,32 +27,12 @@ const CriarPost = () => {
         // return;
         // }
 
-        setImageFile(file);
+       setImageFile(file);
 
     }
-
-    const bgClass = isPending
-        ? "bg-orange-600 hover:bg-orange-700"
-        : isError
-            ? "bg-red-600 hover:bg-red-700"
-            : "bg-indigo-600 hover:bg-indigo-700";
-
-    const bgAviso = isPending
-        ? "Carregando"
-        : isError
-            ? "Aconteceu um erro"
-            : "Enviar";
-
-    const bgAvisoSecundario = isPending
-        ? "Carregando..."
-        : isError
-            ? "Tentar enviar novamente"
-            : "Confirmar";
-
-
-
+    
     return (
-        <form className="p-10 " onSubmit={HandleSubmit}>
+        <form className="p-10 " onSubmit={handleSubmit}>
             <div className="space-y-12">
                 <div className="border-b border-white/10 pb-12">
                     <h2 className="text-base/7 font-semibold text-white">Criar Post</h2>
@@ -128,7 +96,7 @@ const CriarPost = () => {
                                         >
                                             <span className="underline">Envie um arquivo</span>
                                             <input id="file-upload" name="file-upload" type="file" accept="image/*" className="sr-only"
-                                                onChange={handleFileChange}
+                                            onChange={handleFileChange}
                                             />
                                         </label>
                                         <p className="pl-1">clicando <span className="font-semibold text-indigo-400">lá</span> 👈 !</p>
@@ -138,10 +106,10 @@ const CriarPost = () => {
                             </div>
                             <button className={`group px-8 py-2.5 my-10 rounded-lg text-white
 cursor-pointer active:scale-95 transition duration-300
-mx-auto w-full ${bgClass}`}>
+mx-auto w-full ${MutateOptionsBackend.bgClass}`}>
                                 <p className="relative h-6 overflow-hidden">
-                                    <span className="block transition-transform duration-300 group-hover:-translate-y-full">{bgAviso}</span>
-                                    <span className="absolute w-full top-full left-1/2 -translate-x-1/2 block transition-transform duration-300 group-hover:translate-y-[-100%]">{bgAvisoSecundario}</span>
+                                    <span className="block transition-transform duration-300 group-hover:-translate-y-full">{MutateOptionsBackend.bgAviso}</span>
+                                    <span className="absolute w-full top-full left-1/2 -translate-x-1/2 block transition-transform duration-300 group-hover:translate-y-[-100%]">{MutateOptionsBackend.bgAvisoSecundario}</span>
                                 </p>
                             </button>
                         </div>

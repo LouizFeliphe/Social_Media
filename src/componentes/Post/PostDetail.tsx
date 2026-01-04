@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import {LikeBotao} from "./likebotao";
+import {LikeBotao} from "../Likes/likebotao";
 import { Svgs } from "../../assets/assets";
 import { Comentarios } from "../Comentario/Comentarios";
 import type { Post, Props } from "./interface";

@@ -1,12 +1,13 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useAuth } from "../../contexto/auth/useAuth";
 import type { Comentario, ComentarioItemType } from "./interface";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { EditarComentario, EnviarComentario } from "../backend/Post";
+import { EnviarComentario } from "../backend/Post";
 import { Svgs } from "../../assets/assets";
 import { DeletarComentario } from "../backend/Delete";
+import { EditarComentario } from "../backend/update";
 
-const ComentarioItem = ({ postId, comentario }: ComentarioItemType) => {
+export const ComentarioItem = ({ postId, comentario }: ComentarioItemType) => {
 
     const queryCliente = useQueryClient()
     const [responder, setResponder] = useState<boolean>(false)
@@ -116,4 +117,3 @@ const ComentarioItem = ({ postId, comentario }: ComentarioItemType) => {
     )
 }
 
-export default ComentarioItem;

@@ -8,7 +8,6 @@ export interface PostInput {
     avatar_url: string | null,
 }
 
-
 export interface Post{
     id: number,
     titulo: string,
@@ -18,12 +17,6 @@ export interface Post{
     avatar_url: string,
     nome: string,
     email: string,
-
 }
 
-export interface Like {
-  id: number;
-  post_id: number;
-  user_id: string;
-  vote: number;
-}
+

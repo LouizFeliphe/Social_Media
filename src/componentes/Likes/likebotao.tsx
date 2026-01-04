@@ -1,9 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "../../contexto/auth/useAuth";
 import { Svgs } from "../../assets/assets";
-import type { Like, Props } from "./interface";
+import type { Props } from "../Post/interface";
 import { FetchVotes } from "../backend/Get";
 import { Vote } from "../backend/Post";
+import type { Like } from "./interface";
 
 export const LikeBotao = ({ postId }: Props) => {
   const { usuario } = useAuth();
@@ -53,3 +54,4 @@ export const LikeBotao = ({ postId }: Props) => {
     </div>
   );
 };
+
