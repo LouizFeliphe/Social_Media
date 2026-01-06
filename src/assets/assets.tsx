@@ -22,6 +22,7 @@ import editar from './editar.svg'
 import gif from './gif.svg'
 import comentario from './comentario.svg'
 import like from './like.svg'
+import correto from './correto.svg'
 
 
 export const Svgs = {
@@ -49,4 +50,5 @@ export const Svgs = {
     gif: gif,
     comentario: comentario,
     like: like,
+    correto: correto,
 }

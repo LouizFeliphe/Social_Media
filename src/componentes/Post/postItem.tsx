@@ -15,10 +15,13 @@ const PostItem = ({ post }: {
   const {usuario} = useAuth()
   const {data: comentariosFetch, error: erroFetch, isLoading} = useQuery<Comentario[]>({queryFn: () => ReceberComentarios(post.id), queryKey: ["comentarios", post.id]})
 
-
   const comentariosQuantidade = comentariosFetch?.length ;
   const userComentario = comentariosFetch?.find((c) => c.user_id === usuario?.id);
   const fotoPerfil = post?.avatar_url
+
+  console.log(post.image_url);
+  
+  const isVideo = post?.image_url ? post.image_url.endsWith("mp4") ? true : false : false
 
   return (
     <div className="w-[100%] sm:p-5 border-b-[1px] border-gray-600">
@@ -38,7 +41,11 @@ const PostItem = ({ post }: {
       </div>
       </Link>
       {post?.image_url && (<div >
-        <img src={post.image_url} alt="imagem" className="sm:max-w-[80%] sm:max-h-[450px] max-sm:min-w-[250px] max-sm:max-w-[420px] max-sm:w-[80vw] max-h-[400px] rounded-[20px] object-cover sm:ml-25 max-sm:ml-15 mt-2" />
+        { isVideo ? ( <video
+          src={post.image_url}
+          controls
+          className="sm:max-w-[80%] sm:max-h-[450px] max-sm:min-w-[250px] max-sm:max-w-[420px] max-sm:w-[80vw] max-h-[400px] rounded-[20px] sm:ml-25 max-sm:ml-15 mt-2"
+        />): (<img src={post.image_url} alt="imagem" className="sm:max-w-[80%] sm:max-h-[450px] max-sm:min-w-[250px] max-sm:max-w-[420px] max-sm:w-[80vw] max-h-[400px] rounded-[20px] object-cover sm:ml-25 max-sm:ml-15 mt-2" />)}
       </div>)}
       <div className="flex items-center gap-5 mt-4 ml-25 max-sm:ml-15 mb-3">
         <LikeBotaoHome comentariosQuantidade={comentariosQuantidade} userComentario={userComentario}/>

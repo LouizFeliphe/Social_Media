@@ -5,9 +5,13 @@ import type { PostInput } from "../Post/interface";
 export const CriarPostBackend = async (post: PostInput, imageFile: File | null) => {
 
     if(imageFile){
-    const filePath = `${post.titulo}-${Date.now()}-${imageFile.name}`
 
-    const { error: uploadError } = await supabase.storage.from("post-images").upload(filePath, imageFile)
+    const extensao = imageFile.name.split(".").pop()
+
+    const filePath = `${crypto.randomUUID()}.${extensao}`
+
+    const { error: uploadError } = await supabase.storage.from("post-images").upload(filePath, imageFile,{
+    contentType: imageFile.type })
 
     if (uploadError) throw new Error(uploadError.message)
 
@@ -57,7 +61,6 @@ export const Vote = async (likeValue: number, postId: number, userId: string) =>
     .maybeSingle();
 
   if (existingLike) {
-    // Liked -> 0, Like -> -1
     if (existingLike.vote === likeValue) {
       console.log("entrou");
       const { error } = await supabase

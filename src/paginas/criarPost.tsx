@@ -1,38 +1,88 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Svgs } from "../assets/assets"
-import { EnviarPost } from "../componentes/Post/CriarPost/EnviarPost"
+import { EnviarPost, FileChange } from "../componentes/Post/CriarPost/EnviarPost"
 
 const CriarPost = () => {
     const [titulo, setTitulo] = useState<string>("")
     const [conteudo, setConteudo] = useState<string>("")
     const [imageFile, setImageFile] = useState<File | null>(null);
-   
-    const MutateOptionsBackend = EnviarPost({titulo, conteudo, imageFile})
+    const [gif, setGif] = useState<string>("")
+    const [gif2, setGif2] = useState<string>("")
+    const [gifCaminhoCategoria, setGifCaminhoCategoria] = useState<string>("")
+    const [gifTextCategoria, setGifTextCategoria] = useState<string>("")
 
-    const handleSubmit = (event: React.FormEvent) =>{
+    useEffect(() => {
+        const Grab_data = async () => {
+            // set the apikey and limit
+            const apikey = import.meta.env.VITE_TENORKEY as string;
+            const clientkey = "my_test_app";
+            const lmt = 8;
+
+            // test search term
+            const search_term = "excited";
+
+            const cat_url = "https://tenor.googleapis.com/v2/categories?key=" + apikey + "&client_key=" + clientkey;
+            const search_url = "https://tenor.googleapis.com/v2/search?q=" + search_term + "&key=" +
+                apikey + "&client_key=" + clientkey + "&limit=" + lmt + "&locale=" + "pt_BR";
+            try {
+                const resposta = await fetch(search_url)
+                const data = await resposta.json()
+                const respostaCategoria = await fetch(cat_url)
+                const dataCategoria = await respostaCategoria.json()
+                const categories = dataCategoria["tags"];
+
+
+                // url to load:
+                const imagem = categories[0]["image"];
+
+                // text to overlay on image:
+                const txt_overlay = categories[0]["name"];
+
+                // search to run if user clicks the category
+                const caminhoPesquisa = categories[0]["path"];
+
+                const top_10_gifs = data["results"]
+                setGif2(imagem)
+                setGifCaminhoCategoria(caminhoPesquisa)
+                setGifTextCategoria(txt_overlay)
+                setGif(top_10_gifs[0].media_formats.gif.url)
+            }
+            catch (err) {
+                console.log("Erro API: " + err);
+
+            }
+        }
+        Grab_data()
+    }, [])
+
+    const MutateOptionsBackend = EnviarPost({ titulo, conteudo, imageFile })
+
+    const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault()
         MutateOptionsBackend.IniciarEnvio()
-        if(!MutateOptionsBackend.isError) setConteudo("")
+        if (!MutateOptionsBackend.isError) {
+            setConteudo("")
+            setImageFile(null)
+        }
     }
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0];
 
-        if (!file) return;
-
-
-        // if (file.size > 15 * 1024 * 1024) {
-        // setFileError("A imagem deve ter no máximo 15MB");
-        // event.target.value = "";
-        // return;
-        // }
-
-       setImageFile(file);
+        const file = FileChange(event)
+        if (!file) return
+        setImageFile(file)
 
     }
-    
+
     return (
         <form className="p-10 " onSubmit={handleSubmit}>
+            {gif && (<img src={gif} alt="gif" />)}
+            {gif2 && (<div >
+                <a id="cat_link" href={gifCaminhoCategoria}>
+                    <img id="category_gif" src={gif2} alt="gif2" />
+                    <div id="catgif_caption">{gifTextCategoria}</div>
+                </a>
+            </div>)}
             <div className="space-y-12">
                 <div className="border-b border-white/10 pb-12">
                     <h2 className="text-base/7 font-semibold text-white">Criar Post</h2>
@@ -96,7 +146,7 @@ const CriarPost = () => {
                                         >
                                             <span className="underline">Envie um arquivo</span>
                                             <input id="file-upload" name="file-upload" type="file" accept="image/*" className="sr-only"
-                                            onChange={handleFileChange}
+                                                onChange={handleFileChange}
                                             />
                                         </label>
                                         <p className="pl-1">clicando <span className="font-semibold text-indigo-400">lá</span> 👈 !</p>
