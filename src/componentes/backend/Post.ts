@@ -2,16 +2,16 @@ import { supabase } from "../../supabase";
 import type { Comentario } from "../Comentario/interface";
 import type { PostInput } from "../Post/interface";
 
-export const CriarPostBackend = async (post: PostInput, imageFile: File | null) => {
+export const CriarPostBackend = async (post: PostInput, imageFile: File | null ) => {
 
     if(imageFile){
-
+    
     const extensao = imageFile.name.split(".").pop()
 
     const filePath = `${crypto.randomUUID()}.${extensao}`
 
-    const { error: uploadError } = await supabase.storage.from("post-images").upload(filePath, imageFile,{
-    contentType: imageFile.type })
+    const { error: uploadError } = await supabase.storage.from("post-images").upload(filePath, imageFile,
+    {contentType: imageFile.type })
 
     if (uploadError) throw new Error(uploadError.message)
 
@@ -62,7 +62,6 @@ export const Vote = async (likeValue: number, postId: number, userId: string) =>
 
   if (existingLike) {
     if (existingLike.vote === likeValue) {
-      console.log("entrou");
       const { error } = await supabase
         .from("likes")
         .delete()
@@ -85,3 +84,17 @@ export const Vote = async (likeValue: number, postId: number, userId: string) =>
   }
 };
 
+export const ConversorGifToFile = async (url: string, filename: string) => {
+  
+  const response = await fetch(url)
+
+  if (!response.ok) {
+    throw new Error('Erro ao baixar o GIF')
+  }
+
+  const blob = await response.blob()
+
+  return new File([blob], filename, {
+    type: blob.type || 'image/gif',
+  })
+}

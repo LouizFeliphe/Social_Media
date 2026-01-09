@@ -15,19 +15,37 @@ export const ComentarioItem = ({ postId, comentario }: ComentarioItemType) => {
     const [mostrarRespostas, setMostrarRespostas] = useState<boolean>(false)
     const [expandido, setExpandido] = useState(false);
     const [editar,setEditar] = useState(false)
-   
+    const { usuario } = useAuth()
 
     const { mutate, error, isPending } = useMutation({
         mutationFn: (data: Comentario) => {
+            if(!usuario?.user_metadata)  {
+            alert("Você deve estar logado")
+            throw new Error("usuario nao encontrado");
+            }
             return EnviarComentario(data)
         }, onSuccess: () => {
-
             queryCliente.invalidateQueries({ queryKey: ["comentarios", postId] })
         }
     })
-    const {mutate:mutateDeletar, error:deletarErro, isPending:isPendingDeletar} = useMutation({ mutationFn: (data: {comentarioId: number}) => DeletarComentario(data.comentarioId), onSuccess: () => queryCliente.invalidateQueries({ queryKey: ["comentarios", postId] })})
 
-    const {mutate:mutateEditar, error:editarErro, isPending:isPendingEditar} = useMutation({ mutationFn: (data: {comentarioEditado: string, comentarioId: number}) => EditarComentario(data.comentarioEditado,data.comentarioId), onSuccess: () => {
+    const {mutate:mutateDeletar, error:deletarErro, isPending:isPendingDeletar} = useMutation({ mutationFn: (data: {comentarioId: number}) => {
+        if(!usuario?.user_metadata)  {
+        alert("Você deve estar logado")
+        throw new Error("usuario nao encontrado");
+        }
+        return DeletarComentario(data.comentarioId)
+    }, onSuccess: () => {
+        queryCliente.invalidateQueries({ queryKey: ["comentarios", postId] })
+    }})
+
+    const {mutate:mutateEditar, error:editarErro, isPending:isPendingEditar} = useMutation({ mutationFn: (data: {comentarioEditado: string, comentarioId: number}) =>{
+        if(!usuario?.user_metadata)  {
+        alert("Você deve estar logado")
+        throw new Error("usuario nao encontrado");
+      }
+    return EditarComentario(data.comentarioEditado,data.comentarioId)
+    }, onSuccess: () => {
         setEditar(false)
         queryCliente.invalidateQueries({ queryKey: ["comentarios", postId] })
     }})
@@ -51,20 +69,23 @@ export const ComentarioItem = ({ postId, comentario }: ComentarioItemType) => {
         setResponder(false)
     }
 
-    const { usuario } = useAuth()
+    
 
     return (
-        <div className="space-y-4 p-4 max-sm:p-0 max-sm:pt-10">
+        <div className="space-y-4 p-4 max-sm:p-0 max-sm:pt-10 max-sm:pb-16">
             <div>
-                <div className="flex gap-5 mb-3">
-                    <img src={comentario?.avatar_url ?? Svgs.user} alt="item" className={`h-10 w-10 rounded-full object-cover ${comentario?.avatar_url ?? "invert"}`} />
+                <div className="flex max-sm:flex-col gap-5 mb-3">
+                    <div className="flex items-center jsutify-center gap-5">
+                        <img src={comentario?.avatar_url ?? Svgs.user} alt="item" className={`h-10 w-10 rounded-full object-cover ${comentario?.avatar_url ?? "invert"}`} />
                     <span className="font-bold">{comentario.author}</span>
-                    <span className="font-light italic">{new Date(comentario.created_at!).toLocaleString()}</span>
+                    </div>
+
+                    <span className="font-light italic">{new Date(comentario.created_at!).toLocaleDateString()}</span>
                 </div>
                 <textarea value={ comentarioFormulario ? comentarioFormulario : comentario.conteudo } className={`mb-4 p-5 bg-white/5 outline-2 -outline-offset-1 outline-indigo-400 focus-within:outline-3 focus-within:-outline-offset-2 focus-within:outline-indigo-600 w-full h-50 ${editar ? "": "hidden"}`} onChange={(e)=>setComentarioFormulario(e.target.value)}/>
                 <p className={`mb-4 p-5 text-justify ${expandido ? "" : "line-clamp-3"
                     } ${editar ? "hidden" : ""}`}>{comentario.conteudo}</p>
-                <div className="mb-5 flex justify-between">
+                <div className={`mb-5 flex justify-between ${usuario?.id === comentario.user_id ? "" : "hidden"}`}>
                     <div className="flex gap-4">
                           <button onClick={handleDeletarComentario}>
                         <img src={Svgs.lixo} alt="lixeira" className="h-5 invert"/>
@@ -80,12 +101,13 @@ export const ComentarioItem = ({ postId, comentario }: ComentarioItemType) => {
                         className={`text-md font-semibold text-indigo-400 hover:underline cursor-pointer ${editar ? "hidden": ""}`}
                     >
                         {expandido ? "Ler menos" : "Ler mais"}
-                    </button>
-                )}   
+                    </button>)}
+                    {isPendingEditar && (<span>Carregando..</span>)}
+                    {editarErro && (<span>Erro ao deletar</span>)}   
                 </div>
                
                 <div className="flex gap-5">
-                    <button className="font-semibold hover:underline cursor-pointer" onClick={() => setResponder((prev) => !prev)}>Comentar</button>
+                    <button className="font-semibold hover:underline cursor-pointer" onClick={() => setResponder((prev) => !prev)}>{`${responder ? "Sair" : "Comentar"}`}</button>
                     <button className={`${comentario.children!.length > 0 ? "" : "hidden"} cursor-pointer`} onClick={() => setMostrarRespostas((prev) => !prev)}>{mostrarRespostas ? <img src={Svgs.abrirComentario} alt="abriComentario" className="h-7 invert" /> : <img src={Svgs.fecharComentario} className="h-7 invert" alt="abriComentario" />}</button>
                 </div>
 

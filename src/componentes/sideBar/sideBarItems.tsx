@@ -9,11 +9,14 @@ export const SidebarItem = ({ icon, text, link, alert, }: {
     alert?: boolean
 }) => {
 
-    const {expandir} = useSidebar()
+    const {expandir, toggle} = useSidebar()
 
     return (
         <li className="W-full py-2  px-3 my-1 font-medium rounded-md cursor-pointer">
             <NavLink
+                onClick={()=> {
+                    if(window.innerWidth < 1024) toggle()
+                }}
                 to={link}
                 className={({ isActive }) =>
                     `

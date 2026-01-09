@@ -32,30 +32,22 @@
     animation: loading 0.8s ease infinite;
   }
 
-   .rainbow::before {
-      content: '';
-      position: absolute;
-      z-index: -2;
-      left: -50%;
-      top: -50%;
-      width: 200%;
-      height: 200%;
-      background-position: 100% 50%;
-      background-repeat: no-repeat;
-      background-size: 50% 30%;
-      filter: blur(6px);
-      background-image: linear-gradient(#FF0A7F,#780EFF);
-      animation: rotate 4s linear infinite;
-  }
 }
 
-.reveal {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.7s ease, transform 0.7s ease;
+:root {
+  color-scheme: dark;
 }
 
-.reveal.visible {
-  opacity: 1;
-  transform: translateY(0);
+html {
+  scroll-behavior: smooth;
+}
+
+main {
+  scroll-behavior: smooth;
+}
+
+body {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: auto;
+  touch-action: pan-y;
 }

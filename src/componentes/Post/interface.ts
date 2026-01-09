@@ -1,5 +1,6 @@
 export interface Props {
   postId: number;
+  isHome: boolean
 }
 
 export interface PostInput {

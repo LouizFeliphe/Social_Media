@@ -9,8 +9,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const [usuario, setUsuario] = useState<User | null>(null);
 
+    console.log("ola: " + window.location.origin);
+    
+
     const signInWithGoogle = () => {
-        supabase.auth.signInWithOAuth({ provider: "google" })
+        supabase.auth.signInWithOAuth({ provider: "google",options: {
+      redirectTo: window.location.origin
+    }})
     }
 
     const singOut = () => {

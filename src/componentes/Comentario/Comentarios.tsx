@@ -5,28 +5,40 @@ import {ComentarioItem} from "./ComentarioItem"
 import type { Comentario, ComentarioArvore, Props } from "./interface"
 import { EnviarComentario } from "../backend/Post"
 import { ReceberComentarios } from "../backend/Get"
+import { Svgs } from "../../assets/assets"
+import { PostHome } from "../Post/CriarPost/PostHome"
+import { Link } from "react-router"
 
 
-export const Comentarios = ({postId}: Props) => {
+export const Comentarios = ({postId, isHome, nomePost}: Props) => {
 
     const [comentario, setComentario] = useState<string>("")
+    const [abirComentario,setAbrirComentario] = useState<boolean>(false)
     const {usuario} = useAuth()
     const queryClient = useQueryClient()
 
     const {data: comentariosFetch, error: erroFetch, isLoading} = useQuery<Comentario[]>({queryFn: () => ReceberComentarios(postId), queryKey: ["comentarios", postId]})
 
-    const {mutate, isPending, error} = useMutation({mutationFn: (dados: Comentario)=> EnviarComentario(dados), 
+    const {mutate, isPending, error} = useMutation({mutationFn: (dados: Comentario)=> {
+        if(!usuario?.user_metadata)  {
+        alert("Você deve estar logado")
+        setAbrirComentario(false)
+        throw new Error("usuario nao encontrado");
+      }
+        return EnviarComentario(dados)
+    }, 
     
     onSuccess:()=>{
+         setAbrirComentario(false)
          queryClient.invalidateQueries({ queryKey: ["comentarios", postId] });
     }
     })
 
-    const handleSubmit = (e: React.FormEvent) =>{
+    const handleSubmit = (e: React.FormEvent, comentarioHome?: string) =>{
 
         e.preventDefault()     
 
-        mutate({post_id: postId, conteudo: comentario, user_id: usuario?.id || null, author: usuario?.user_metadata.name || null, pai_comentario_id: null, avatar_url: usuario?.user_metadata.avatar_url || null})     
+        mutate({post_id: postId, conteudo: comentarioHome || comentario, user_id: usuario?.id || null, author: usuario?.user_metadata.name || null, pai_comentario_id: null, avatar_url: usuario?.user_metadata.avatar_url || null})    
     }
 
     const ConstrutorComentario = (comentarios: Comentario[]): ComentarioArvore[] =>{
@@ -50,8 +62,62 @@ export const Comentarios = ({postId}: Props) => {
 
         return raizes
     }
+       
+    const comentariosPagina: ComentarioArvore[] = comentariosFetch ? ConstrutorComentario(comentariosFetch) : []
+    const comentariosQuantidade:number = comentariosFetch?.length || 0    
+    const userComentario = comentariosFetch?.find((c) => c.user_id === usuario?.id)
 
-    const comentariosPagina: ComentarioArvore[] = comentariosFetch ? ConstrutorComentario(comentariosFetch) : [] 
+    if(isHome){
+        if(userComentario){
+            return (
+                <Link to={`/post/${postId}`} onClick={()=>{}}className={`px-5 py-2 rounded-lg 
+                    cursor-pointer active:scale-95 bg-[#3d494f] hover:bg-[#333D42]
+                    `}>
+                    <span className="flex items-center gap-3">{`${comentariosQuantidade}`}<img src={Svgs.comentario} alt="Like" className="h-4" /></span>
+            </Link>
+      )
+        }
+        return (
+            <div>
+                {abirComentario && (
+                <div className={`${usuario?.user_metadata ? "" : "hidden"}`}>
+                <div className="fixed inset-0 bg-black/50 z-40"></div>
+                <div className="fixed
+      top-25 left-50
+      max-lg:left-25 max-lg:top-10
+      max-md:top-0 max-md:left-0
+      z-[9999]
+      bg-[#232a2e]
+      w-[70%]
+      max-md:w-screen
+      max-md:min-h-screen
+      p-5
+      rounded-md
+      max-h-[100dvh]
+      overflow-y-auto">
+                <div className="flex justify-between"> 
+                    <span className="ml-5">Respondendo ao Post <span className="text-blue-400 italic">"{nomePost}"</span></span>
+                     <img src={Svgs.xFechar} alt="fechar" className="h-8 invert mr-4 cursor-pointer" onClick={()=> setAbrirComentario(false)} />
+                    </div>
+                    <PostHome isComentarioPost={true} onClicar={(e: React.FormEvent, comentarioHome:string)=> handleSubmit(e, comentarioHome)}/> 
+                </div>
+                </div>)
+                }
+                <button onClick={()=> {
+                    if(usuario?.user_metadata) setAbrirComentario((prev) => !prev)
+                    else alert("Você precisa estar logado")
+                   }
+                } className={`group px-5 py-2 rounded-lg 
+                cursor-pointer active:scale-95 transition-all duration-300 bg-[#3d494f] hover:bg-[#333D42]
+                `}>
+                <p className="relative overflow-hidden">
+                <span className="block transition-transform duration-300 group-hover:-translate-y-full flex items-center gap-3">{`${comentariosQuantidade} `}<img src={Svgs.comentario} alt="comentario" className={`h-4 ${userComentario ? "" : "invert"}`} /></span>
+                <span className="absolute w-full top-full left-1/2 -translate-x-1/2 block transition-transform duration-300 group-hover:translate-y-[-100%] flex items-center gap-3">{`${comentariosQuantidade !== undefined ? userComentario ? comentariosQuantidade : comentariosQuantidade + 1 : comentariosQuantidade} `}<img src={Svgs.comentario} alt="comentario" className={`h-4 ${userComentario ? "invert" : ""}`} /></span>
+                </p>
+                </button>
+            </div>
+        )
+    }
 
     return (
         <div className="w-[90%]"> 
@@ -62,7 +128,6 @@ export const Comentarios = ({postId}: Props) => {
                 setComentario(e.target.value)
             }}/>
             </div>
-            
             <button className="flex items-center justify-center rounded-md bg-indigo-600 p-2 mt-3 w-26 h-8 cursor-pointer hover:bg-indigo-700">Enviar</button>
             </form>
             {isPending || isLoading && (<span>Carregando...</span>)}
@@ -72,7 +137,7 @@ export const Comentarios = ({postId}: Props) => {
                 return (
                     <ComentarioItem comentario={comentario} key={key} postId={postId}/>
                 )
-            })}</div>
+            })}</div> 
         </div>
     )
 }

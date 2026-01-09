@@ -21,6 +21,7 @@ export const App = () => {
     <AuthProvider>
     <BrowserRouter>
       <SidebarProvider>
+      <div className="">
         <NavBar />
         <div className="pt-16 h-screen flex bg-black text-gray-100">
           <SideBar>
@@ -30,7 +31,7 @@ export const App = () => {
             <SidebarItem icon={Svgs.criarComunidade} text="Criar Comunidades" link="/comunidade/criar" />
           </SideBar>
 
-          <main className="flex-1 overflow-y-auto">
+          <main className="flex-1 overflow-y-auto overscroll-y-contain" >
             <ScrollToTop/>
             <Routes>
               <Route path="/" element={<Home />} />
@@ -39,6 +40,7 @@ export const App = () => {
             </Routes>
           </main>
         </div>
+      </div>
       </SidebarProvider>
     </BrowserRouter>
     </AuthProvider>

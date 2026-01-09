@@ -1,12 +1,14 @@
 import { useAuth } from "../../../contexto/auth/useAuth";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { CriarPostBackend } from "../../backend/Post";
+import {  ConversorGifToFile, CriarPostBackend } from "../../backend/Post";
 import type { PostInput } from "../interface";
+import { type Dispatch, type SetStateAction } from "react";
+
 
 interface Props {
     titulo: string 
     conteudo: string ,
-    imageFile: File | null,
+    imageFile: File | null ,
 }
 
 const MAX_SIZE_Image = 15 * 1024 * 1024; //15MB
@@ -53,17 +55,17 @@ export const FileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     return file
   }
 
-export const EnviarPost = ({titulo,conteudo,imageFile}:Props) => {
+export const EnviarPost = () => {
 
     const queryClient = useQueryClient()
     const { usuario } = useAuth()
 
-    const { mutate, isError, isPending } = useMutation({ mutationFn: (data: { post: PostInput, imageFile: File | null }) => CriarPostBackend(data.post, data.imageFile), onSuccess: ()=>{
+    const { mutateAsync, isError, isPending } = useMutation({ mutationFn: (data: { post: PostInput, imageFile: File | null}) => CriarPostBackend(data.post, data.imageFile), onSuccess: ()=>{
         queryClient.invalidateQueries({queryKey: ["posts"]})
     }})
 
-    const IniciarEnvio = () => {
-        mutate({ post: { titulo, conteudo, avatar_url: usuario?.user_metadata.avatar_url || null }, imageFile: imageFile })
+    const IniciarEnvio = ({titulo,conteudo,imageFile}:Props) => {
+        return mutateAsync({ post: { titulo, conteudo, avatar_url: usuario?.user_metadata.avatar_url || null }, imageFile: imageFile })
     }
 
 
@@ -93,5 +95,27 @@ export const EnviarPost = ({titulo,conteudo,imageFile}:Props) => {
         isError,
         isPending
     }
+
 }
 
+export const GifConversor = (setImage: Dispatch<SetStateAction<File | null>>) => {
+
+  const { isError, isPending, mutate} = useMutation({ mutationFn: ({gifUrl, filename}:{gifUrl: string, filename: string}) => {
+        if (!gifUrl || !filename) {
+        throw new Error("Parâmetros não definidos")
+      }
+        return ConversorGifToFile(gifUrl, filename)
+    }, onSuccess: (fileGif)=>{     
+      setImage(fileGif)
+    }})
+
+     const IniciarParametros = (gifUrlParam: string, filenameParam:string) => {   
+       mutate({gifUrl: gifUrlParam, filename:filenameParam})
+    }
+            
+    return{
+        IniciarParametros,
+        isError,
+        isPending,
+    }
+}

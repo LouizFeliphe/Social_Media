@@ -7,7 +7,7 @@ export const PostPage = () => {
 
   return (
     <div className="pt-7">
-      <PostDetail postId={Number(id)} />
+      <PostDetail postId={Number(id)} isHome={false}/>
     </div>
   );
 };

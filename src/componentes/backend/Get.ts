@@ -50,30 +50,35 @@ const clientkey = "SocialApp"
 const lmt = 12
 
 export const fetchGifs = async (term: string) => {
-    try {
+      
       const search_url =
         `https://tenor.googleapis.com/v2/search?q=${term}` +
         `&key=${apikey}&client_key=${clientkey}&limit=${lmt}&locale=pt_BR`
 
       const res = await fetch(search_url)
+
+      if(!res.ok){
+        throw new Error("Erro: " + res.status)
+      }
+
       const data = await res.json()
 
-      return data.results || []
-    } catch (err) {
-      throw new Error("ErroGif: " + err )
-    } 
+      return data.results || [] 
 }
 
 export const fetchCategories = async () => {
-    try {
+   
       const cat_url =
-        `https://tenor.googleapis.com/v2/categories?key=${apikey}&client_key=${clientkey}`
+        `https://tenor.googleapis.com/v2/categories?key=${apikey}&client_key=${clientkey}&locale=pt_BR`
 
       const res = await fetch(cat_url)
-      const data = await res.json()
 
+      if(!res.ok){
+        throw new Error("Erro: " + res.status)
+      }
+
+      const data = await res.json()
+  
       return data.tags || []
-    } catch (err) {
-      throw new Error("ErroGif: " + err )
-    }
 }
+

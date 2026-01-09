@@ -1,6 +1,8 @@
 
 export interface Props{
     postId: number,
+    isHome: boolean,
+    nomePost?: string
 }
 
 export interface Comentario {
