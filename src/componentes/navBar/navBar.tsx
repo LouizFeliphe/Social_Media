@@ -1,4 +1,4 @@
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { Svgs } from "../../assets/assets";
 import SearchBar from "./searchBar";
 import { useSidebar } from "../../contexto/sideBar/useSideBar";
@@ -10,10 +10,8 @@ const NavBar = () => {
 
     const { expandir, toggle } = useSidebar()
 
-    const { signInWithGoogle, singOut, usuario } = useAuth()
-
-    const mostrarNome = usuario?.user_metadata.name
-  
+    const { singOut, usuario } = useAuth()
+    const navegar = useNavigate()
 
     return (
         <nav className="fixed top-0 w-full z-40 bg-[rgba(10,10,10,0.8)] backdrop-blur-lg border-b border-white/70 shadow-lg">
@@ -44,7 +42,9 @@ const NavBar = () => {
                     </div>
 
                      {/*Login signout*/}
-                    {mostrarNome ? <Botao texto="SignOut" funcao={singOut}/> : <Botao texto="Log-in" funcao={signInWithGoogle}/> }
+                    {usuario?.user_metadata ? <Botao texto="SignOut" funcao={singOut}/> : <Botao texto="Log-in" funcao={()=>{
+                        navegar("/signin")
+                    }}/> }
                 </div>
             </div>
         </nav>

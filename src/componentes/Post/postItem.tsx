@@ -11,8 +11,6 @@ const PostItem = ({ post }: {
   const fotoPerfil = post?.avatar_url
   
   const isVideo = post?.image_url ? post.image_url.endsWith("mp4") ? true : false : false
-
-  console.log("o QUE TEM NO POST: " + post?.avatar_url);
   
 
   return (

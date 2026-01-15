@@ -37,8 +37,6 @@ export const PostDetail = ({ postId }: Props) => {
           className="rounded object-cover max-lg:w-[80%] lg:w-[70%] max-h-[950px] "
         />)}
 
-
-
       <p className="text-gray-400 md:text-justify p-10 text-left break-words md:w-[88%] max-md:w-full mb-20 mt-10 text-xl">{data?.conteudo}</p>
       <p className="text-gray-500 text-sm">
         Postado em: {data?.created_at ? new Date(data.created_at).toLocaleDateString() : "Data desconhecida"}

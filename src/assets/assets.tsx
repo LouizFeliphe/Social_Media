@@ -23,6 +23,8 @@ import gif from './gif.svg'
 import comentario from './comentario.svg'
 import like from './like.svg'
 import correto from './correto.svg'
+import email from './email.svg'
+import google from './google.svg'
 
 
 export const Svgs = {
@@ -51,4 +53,6 @@ export const Svgs = {
     comentario: comentario,
     like: like,
     correto: correto,
+    email: email,
+    google: google,
 }

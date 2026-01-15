@@ -10,6 +10,9 @@ import { PostPage } from "./paginas/PostPage"
 import { SidebarItem } from "./componentes/sideBar/sideBarItems"
 import { SideBar } from "./componentes/sideBar/sideBar"
 import { ScrollToTop } from "./paginas/Scroll"
+import { ConfirmarEmail } from "./componentes/SignInUp/ConfirmarEmail"
+import { SignUp } from "./componentes/SignInUp/SignUp"
+import { SignIn } from "./componentes/SignInUp/SignIn"
 
 
 
@@ -18,8 +21,8 @@ export const App = () => {
 
   return (
     <QueryClientProvider client={cliente}>
-    <AuthProvider>
     <BrowserRouter>
+    <AuthProvider>
       <SidebarProvider>
       <div className="">
         <NavBar />
@@ -37,13 +40,16 @@ export const App = () => {
               <Route path="/" element={<Home />} />
               <Route path="/criar" element={<CriarPost/>}/>
               <Route path="/post/:id" element={<PostPage/>}/>
+              <Route path="/email_confirmar/:email" element={<ConfirmarEmail/>}/>
+              <Route path="/signup" element={<SignUp/>}/>
+               <Route path="/signin" element={<SignIn/>}/>
             </Routes>
           </main>
         </div>
       </div>
       </SidebarProvider>
-    </BrowserRouter>
     </AuthProvider>
+    </BrowserRouter>
     </QueryClientProvider>
   )
 }
