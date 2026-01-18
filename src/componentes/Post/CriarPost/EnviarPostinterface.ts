@@ -8,7 +8,8 @@ import { type Dispatch, type SetStateAction } from "react";
 interface Props {
     titulo: string 
     conteudo: string ,
-    imageFile: File | null ,
+    imageFile: File | null,
+    user_id: string
 }
 
 const MAX_SIZE_Image = 15 * 1024 * 1024; //15MB
@@ -64,8 +65,8 @@ export const EnviarPost = () => {
         queryClient.invalidateQueries({queryKey: ["posts"]})
     }})
 
-    const IniciarEnvio = ({titulo,conteudo,imageFile}:Props) => {
-        return mutateAsync({ post: { titulo, conteudo, avatar_url: usuario?.user_metadata.avatar_url || null }, imageFile: imageFile })
+    const IniciarEnvio = ({titulo,conteudo,imageFile,user_id}:Props) => {    
+        return mutateAsync({ post: { titulo, conteudo, user_id,avatar_url: usuario?.user_metadata.avatar_url || null }, imageFile: imageFile })
     }
 
 

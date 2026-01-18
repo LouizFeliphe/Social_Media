@@ -13,6 +13,7 @@ import { ScrollToTop } from "./paginas/Scroll"
 import { ConfirmarEmail } from "./componentes/SignInUp/ConfirmarEmail"
 import { SignUp } from "./componentes/SignInUp/SignUp"
 import { SignIn } from "./componentes/SignInUp/SignIn"
+import { Perfil } from "./componentes/Perfil/Perfil"
 
 
 
@@ -42,7 +43,8 @@ export const App = () => {
               <Route path="/post/:id" element={<PostPage/>}/>
               <Route path="/email_confirmar/:email" element={<ConfirmarEmail/>}/>
               <Route path="/signup" element={<SignUp/>}/>
-               <Route path="/signin" element={<SignIn/>}/>
+              <Route path="/signin" element={<SignIn/>}/>
+              <Route path="/perfil/:userId" element={<Perfil/>}/>
             </Routes>
           </main>
         </div>

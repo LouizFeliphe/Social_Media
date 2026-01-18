@@ -22,7 +22,7 @@ export const PostPagina = () =>{
         event.preventDefault()
         if(MutateOptionsBackend.isPending) return
         try {
-            await MutateOptionsBackend.IniciarEnvio({titulo: titulo ? titulo : usuario?.user_metadata.name || "Post", conteudo, imageFile: imageFile })
+            await MutateOptionsBackend.IniciarEnvio({titulo: titulo ? titulo : usuario?.user_metadata.name || "Post", conteudo, imageFile: imageFile, user_id: usuario!.id})
             setConteudo("")
             setImageFile(null)
         }

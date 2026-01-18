@@ -26,8 +26,8 @@ export const PostHome = ({isComentarioPost,onClicar}:{
     const handleSubmit = async (event: React.FormEvent) =>{
         event.preventDefault()
         if(MutateOptionsBackend.isPending) return
-        try {
-            await MutateOptionsBackend.IniciarEnvio({titulo: usuario?.user_metadata.name || "Post", conteudo, imageFile: imageFile })
+        try {  
+            await MutateOptionsBackend.IniciarEnvio({titulo: usuario?.user_metadata.name || "Post", conteudo, imageFile: imageFile, user_id: usuario!.id})
             setConteudo("")
             setImageFile(null)
             setAbrirGifs(false)

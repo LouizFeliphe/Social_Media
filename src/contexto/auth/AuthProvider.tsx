@@ -76,9 +76,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             const { data: { session }, error } = await supabase.auth.getSession()
             if (error) {
                 console.log("Erro em pegarUsuario: " + error);
-            }
-            console.log(session);
-            
+            } 
             setUsuario(session?.user ?? null)
 
         }

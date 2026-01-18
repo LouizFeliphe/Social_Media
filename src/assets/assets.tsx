@@ -25,6 +25,8 @@ import like from './like.svg'
 import correto from './correto.svg'
 import email from './email.svg'
 import google from './google.svg'
+import teste from './teste.jfif'
+import teste2 from './teste2.jpg'
 
 
 export const Svgs = {
@@ -55,4 +57,6 @@ export const Svgs = {
     correto: correto,
     email: email,
     google: google,
+    teste: teste,
+    teste2: teste2
 }

@@ -1,6 +1,7 @@
 import { supabase } from "../../supabase"
 import type { Comentario } from "../Comentario/interface"
 import type { Like } from "../Likes/interface"
+import type { Perfil } from "../Perfil/interface"
 import type { Post } from "../Post/interface"
 
 export const ReceberComentarios = async (postId: number) : Promise<Comentario[]> => {
@@ -11,6 +12,29 @@ export const ReceberComentarios = async (postId: number) : Promise<Comentario[]>
         
     return data as Comentario[]
     
+}
+
+export const FetchPerfil = async (userId: string): Promise<Perfil> =>{
+  const {data, error} = await supabase
+  .from("profile")
+  .select("*")
+  .eq("user_id",userId.toString()).single()
+
+  if(error) throw new Error(error.message)
+  
+  return data as Perfil
+}
+
+export const FetchPerfilPosts = async (userId: string): Promise<Post[]>=>{
+  
+  const {data, error} = await supabase
+  .from("posts")
+  .select("*")
+  .eq("user_id",userId.toString())
+
+  if(error) throw new Error(error.message)
+
+  return data as Post[]
 }
 
 export const FetchVotes = async (postId: number): Promise<Like[]> => {
