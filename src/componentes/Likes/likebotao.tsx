@@ -80,11 +80,11 @@ export const LikeBotao = ({ postId, isHome }: Props) => {
   return (
     <div className="flex flex-col items-center space-x-4 gap-4 my-4">
       <div className="flex items-center gap-10">
-       <button type="button" onClick={() => mutate(1)}className={` ${userVote === 1 ? "bg-[#700dbf]" : "bg-[#AD46FF]"} text-white active:scale-95 transition text-sm flex items-center px-4 py-2 gap-2 rounded w-max border border-gray-500/30 transition-colors duration-150`}>
+       <button type="button" onClick={() => mutate(1)}className={` ${userVote === 1 ? "bg-[#700dbf]" : "bg-[#AD46FF]"} text-white active:scale-95 transition text-sm flex items-center px-4 py-2 gap-2 rounded w-max border cursor-pointer border-gray-500/30 transition-colors duration-150`}>
        <img src={Svgs.coracao} alt="like" className={`h-4 ${userVote === 1 ? "" : "invert"}`}/>
                 {likes}
       </button>  
-       <button type="button" onClick={() => mutate(-1)} className={` ${userVote === -1 ? "bg-[#700dbf]" : "bg-[#AD46FF]"} text-white active:scale-95 transition text-sm flex items-center px-4 py-2 gap-2 rounded w-max border border-gray-500/30 transition-colors duration-150`}>
+       <button type="button" onClick={() => mutate(-1)} className={` ${userVote === -1 ? "bg-[#700dbf]" : "bg-[#AD46FF]"} text-white active:scale-95 cursor-pointer transition text-sm flex items-center px-4 py-2 gap-2 rounded w-max border border-gray-500/30 transition-colors duration-150`}>
        <img src={Svgs.coracaoQuebrado} alt="like" className={`h-4 ${userVote === -1 ? "" : "invert"}`}/>
                 {dislikes}
         </button>

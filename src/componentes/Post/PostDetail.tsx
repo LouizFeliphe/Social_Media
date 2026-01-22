@@ -5,6 +5,7 @@ import { Comentarios } from "../Comentario/Comentarios";
 import type { Post, Props } from "./interface";
 import { FetchPostById } from "../backend/Get";
 import { LikeBotao } from "../Likes/likebotao";
+import { Carregamento } from "../Carregamento";
 
 export const PostDetail = ({ postId }: Props) => {
   const { data, error, isLoading } = useQuery<Post, Error>({
@@ -12,9 +13,9 @@ export const PostDetail = ({ postId }: Props) => {
     queryFn: () => FetchPostById(postId),
   });
 
-  if (isLoading) {
-    return <div> Loading posts...</div>;
-  }
+  if (isLoading) return <div className="mt-10">
+  <Carregamento tamanho="20" texto="Carregando Post"/>
+  </div>
 
   if (error) {
     return <div> Error: {error.message}</div>;
@@ -34,7 +35,7 @@ export const PostDetail = ({ postId }: Props) => {
         className="rounded object-cover max-lg:w-[80%] lg:w-[70%] max-h-[950px] " />) : (<img
           src={data?.image_url ? data.image_url : Svgs.anarchy}
           alt={data?.titulo}
-          className="rounded object-cover max-lg:w-[80%] lg:w-[70%] max-h-[950px] "
+          className="border-[0.5px] border-[#2a2b2b] rounded object-cover max-lg:w-[80%] lg:w-[70%] max-h-[950px] "
         />)}
 
       <p className="text-gray-400 md:text-justify p-10 text-left break-words md:w-[88%] max-md:w-full mb-20 mt-10 text-xl">{data?.conteudo}</p>

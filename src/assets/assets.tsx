@@ -27,6 +27,9 @@ import email from './email.svg'
 import google from './google.svg'
 import teste from './teste.jfif'
 import teste2 from './teste2.jpg'
+import noneBackground from './noneBackground.jpg'
+import local from './local.svg'
+import calendar from './calendar.svg'
 
 
 export const Svgs = {
@@ -58,5 +61,8 @@ export const Svgs = {
     email: email,
     google: google,
     teste: teste,
-    teste2: teste2
+    teste2: teste2,
+    noneBackground: noneBackground,
+    local: local,
+    calendar: calendar
 }

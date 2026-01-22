@@ -8,6 +8,7 @@ import { ReceberComentarios } from "../backend/Get"
 import { Svgs } from "../../assets/assets"
 import { PostHome } from "../Post/CriarPost/PostHome"
 import { Link } from "react-router"
+import { Carregamento } from "../Carregamento"
 
 
 export const Comentarios = ({postId, isHome, nomePost}: Props) => {
@@ -19,7 +20,7 @@ export const Comentarios = ({postId, isHome, nomePost}: Props) => {
 
     const {data: comentariosFetch, error: erroFetch, isLoading} = useQuery<Comentario[]>({queryFn: () => ReceberComentarios(postId), queryKey: ["comentarios", postId]})
 
-    const {mutate, isPending, error} = useMutation({mutationFn: (dados: Comentario)=> {
+    const {mutate, isPending, error:erroEnviar} = useMutation({mutationFn: (dados: Comentario)=> {
         if(!usuario?.user_metadata)  {
         alert("Você deve estar logado")
         setAbrirComentario(false)
@@ -130,9 +131,9 @@ export const Comentarios = ({postId, isHome, nomePost}: Props) => {
             </div>
             <button className="flex items-center justify-center rounded-md bg-indigo-600 p-2 mt-3 w-26 h-8 cursor-pointer hover:bg-indigo-700">Enviar</button>
             </form>
-            {isPending || isLoading && (<span>Carregando...</span>)}
-            {error && (<span>Erro, {error.message}</span>)}
-            {erroFetch && (<span>Erro, {erroFetch.message}</span>)}
+            {isPending || isLoading && (<Carregamento tamanho="10" texto=""/>)}
+            {erroEnviar && (<span className="text-red-600 pr-3">Erro ao enviar</span>)}
+            {erroFetch && (<span className="text-red-600">Erro ao carregar comentarios</span>)}
             <div className="space-y-5">{comentariosPagina.map((comentario,key)=>{
                 return (
                     <ComentarioItem comentario={comentario} key={key} postId={postId}/>

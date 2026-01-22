@@ -5,5 +5,6 @@ export interface Perfil {
     avatar_url: string | null,
     email: string,
     about: string | null,
-    location: string | null, 
+    location: string | null,
+    background: string | null, 
 }

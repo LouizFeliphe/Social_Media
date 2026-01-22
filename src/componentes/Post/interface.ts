@@ -6,7 +6,6 @@ export interface Props {
 export interface PostInput {
     titulo: string,
     conteudo: string,
-    avatar_url: string | null,
     user_id: string
 }
 
@@ -16,10 +15,12 @@ export interface Post{
     conteudo: string,
     created_at: string,
     image_url: string,
-    avatar_url: string,
-    nome: string,
-    email: string,
     user_id: string,
+    profile: {
+        avatar_url: string,
+        name: string,
+        email: string,
+    }
 }
 
 

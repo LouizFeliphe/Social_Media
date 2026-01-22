@@ -1,7 +1,7 @@
 import { supabase } from "../../supabase"
 import type { Comentario } from "../Comentario/interface"
-import type { Like } from "../Likes/interface"
-import type { Perfil } from "../Perfil/interface"
+import type { Like, LikePerfil } from "../Likes/interface"
+import type { Perfil } from "../Post/CriarPost/Perfil/interface"
 import type { Post } from "../Post/interface"
 
 export const ReceberComentarios = async (postId: number) : Promise<Comentario[]> => {
@@ -29,12 +29,16 @@ export const FetchPerfilPosts = async (userId: string): Promise<Post[]>=>{
   
   const {data, error} = await supabase
   .from("posts")
-  .select("*")
+  .select(`id,conteudo,created_at,titulo,image_url, user_id, profile!inner (
+      name,
+      email,
+      avatar_url
+    )`)
   .eq("user_id",userId.toString())
 
   if(error) throw new Error(error.message)
 
-  return data as Post[]
+  return data as unknown as Post[]
 }
 
 export const FetchVotes = async (postId: number): Promise<Like[]> => {
@@ -47,13 +51,34 @@ export const FetchVotes = async (postId: number): Promise<Like[]> => {
   return data as Like[];
 };
 
+export const fecthVotesPerfil =  async (user_id: string): Promise<LikePerfil[]> => {
+
+  const { data, error } = await supabase
+    .from("likes")
+    .select(`vote,posts (
+      id,created_at,titulo,conteudo,image_url,user_id, profile!inner (
+      name,
+      email,
+      avatar_url)
+    )`)
+    .eq("user_id", user_id);
+
+  
+  if (error) throw new Error(error.message);
+  return data as unknown as LikePerfil[];
+};
+
 export const FetchPosts = async (): Promise<Post[]> =>{
-    const {data,error} = await supabase.from("posts").select("*").order("created_at",{ascending: false})
+    const {data,error} = await supabase.from("posts").select(`id,conteudo,created_at,titulo,image_url, user_id, profile!inner (
+      name,
+      email,
+      avatar_url
+    )`).order("created_at",{ascending: false})
 
     if (error) throw new Error(error.message)
     
 
-    return data
+    return data as unknown as Post[]
 }
 
 export const FetchPostById = async (id: number): Promise<Post> => {

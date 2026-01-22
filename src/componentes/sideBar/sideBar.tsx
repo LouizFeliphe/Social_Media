@@ -2,6 +2,11 @@ import { type ReactNode } from "react";
 import { Svgs } from "../../assets/assets";
 import { useSidebar } from "../../contexto/sideBar/useSideBar";
 import { useAuth } from "../../contexto/auth/useAuth";
+import { Link } from "react-router";
+import { useQuery } from "@tanstack/react-query";
+import { FetchPerfil } from "../backend/Get";
+import { Carregamento } from "../Carregamento";
+import type { Perfil } from "../Post/CriarPost/Perfil/interface";
 
 
 export const SideBar = ({ children }: {
@@ -9,11 +14,20 @@ export const SideBar = ({ children }: {
 }) => {
 
     const { expandir, toggle } = useSidebar()
-    const { usuario, signInWithGoogle } = useAuth()
+    const { usuario } = useAuth()
+    
+    const { data: Perfil, error, isLoading: isLoadingPerfil } = useQuery({
+        queryKey: ["perfil", usuario?.id  || ""], queryFn: ({ queryKey }) => {
+            const [, usuarioId] = queryKey
+            if (usuarioId)
+                return FetchPerfil(usuarioId)
+            return {} as Perfil
+        }
+    })
 
-    const mostrarNome = usuario?.user_metadata.name
-    const mostrarEmail = usuario?.email
-    const fotoPerfil = usuario?.user_metadata.avatar_url
+    const mostrarNome = Perfil?.name
+    const mostrarEmail = Perfil?.email
+    const fotoPerfil = Perfil?.avatar_url
     
     
 
@@ -52,9 +66,10 @@ export const SideBar = ({ children }: {
 
                     <ul className="flex-1 px-3">{children}</ul>
 
-                    <div className="border-t flex p-3 mx-auto">
+                    {isLoadingPerfil ? <Carregamento tamanho="10" texto=""/> : error ? <span className="text-red-600 mx-auto pb-5">Erro</span>: <div className="border-t flex p-3 mx-auto">
                     
-                        <img src={fotoPerfil ?? Svgs.user} alt="item" className={`h-10 w-10 rounded-full object-cover ${fotoPerfil ?? "invert"}`} />
+                        
+                        {usuario?.id ? <Link to={`/perfil/${usuario.id}`} className="cursor-pointer"><img src={fotoPerfil ?? undefined} alt="item" className="h-10 w-10 rounded-full object-cover"/></Link> : <Link to={"/signin"}><img src={Svgs.user} alt="item" className="h-10 w-10 rounded-full object-cover invert"/></Link>}
                         <div className={`flex justify-between items-center overflow-hidden transition-all duration-700 ${expandir ? "w-52 ml-3" : "w-0"}`}>
 
                             { mostrarNome ? 
@@ -63,12 +78,10 @@ export const SideBar = ({ children }: {
                                 <h4 className="font-semibold text-white">{mostrarNome}</h4>
                                 <span className="text-xs text-white">{mostrarEmail}</span>
                             </div>
-
-                            <img src={Svgs.mais} alt="mais" className="h-9 invert cursor-pointer" /> 
                             </>
-                            : <div className="cursor-pointer" onClick={signInWithGoogle}><h4 className="font-semibold text-white">Desconhecido</h4><span className="text-xs text-white">Log-in</span></div>}
+                            : <Link to={"/signin"} className="cursor-pointer" ><h4 className="font-semibold text-white">Desconhecido</h4><span className="text-xs text-white">Log-in</span></Link>}
                         </div>
-                    </div>
+                    </div>}
 
                 </nav>
             </aside>

@@ -13,12 +13,14 @@ import { ScrollToTop } from "./paginas/Scroll"
 import { ConfirmarEmail } from "./componentes/SignInUp/ConfirmarEmail"
 import { SignUp } from "./componentes/SignInUp/SignUp"
 import { SignIn } from "./componentes/SignInUp/SignIn"
-import { Perfil } from "./componentes/Perfil/Perfil"
+import { Perfil } from "./componentes/Post/CriarPost/Perfil/Perfil"
+import { useRef } from "react"
 
 
 
 export const App = () => {
   const cliente = new QueryClient()
+  const mainRef = useRef<HTMLElement>(null);
 
   return (
     <QueryClientProvider client={cliente}>
@@ -35,8 +37,8 @@ export const App = () => {
             <SidebarItem icon={Svgs.criarComunidade} text="Criar Comunidades" link="/comunidade/criar" />
           </SideBar>
 
-          <main className="flex-1 overflow-y-auto overscroll-y-contain" >
-            <ScrollToTop/>
+          <main ref={mainRef} className="flex-1 overflow-y-auto overscroll-y-contain" >
+            <ScrollToTop scrollRef={mainRef} />
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/criar" element={<CriarPost/>}/>

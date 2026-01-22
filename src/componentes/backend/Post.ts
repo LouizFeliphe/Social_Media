@@ -15,12 +15,12 @@ export const CriarPostBackend = async (post: PostInput, imageFile: File | null )
 
     if (uploadError) throw new Error(uploadError.message)
 
-    const { data: publicUrlData } = supabase.storage.from("post-images").getPublicUrl(filePath)
+    const { data: publicUrlData} = supabase.storage.from("post-images").getPublicUrl(filePath)
 
     const { data, error } = await supabase.from("posts").insert({ ...post, image_url: publicUrlData.publicUrl})
     if (error) throw new Error(error.message)
 
-        return data
+    return data
     }
 
     else{
@@ -98,3 +98,68 @@ export const ConversorGifToFile = async (url: string, filename: string) => {
     type: blob.type || 'image/gif',
   })
 }
+
+export const PerfilPost = async (
+  userId: string,
+  nome: string,
+  backgroundImage: File | null,
+  profileImage: File | null,
+  about: string | null,
+  localizacao: string | null
+) => {
+   
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const updateData: any = {
+    name: nome,
+    about,
+    location: localizacao,
+  };
+
+  if (backgroundImage) {
+    const backgroundPath = `backgrounds/${userId}-${Date.now()}.${backgroundImage.name.split(".").pop()}`;
+
+    const { error: bgError } = await supabase.storage
+      .from("post-images")
+      .upload(backgroundPath, backgroundImage, {
+        contentType: backgroundImage.type,
+      });
+
+    if (bgError) {
+     console.error("Erro upload background:", bgError);
+    throw bgError;
+     }
+
+    const { data } = supabase.storage
+      .from("post-images")
+      .getPublicUrl(backgroundPath);
+
+    updateData.background = data.publicUrl;
+  }
+
+  
+  if (profileImage) {
+    const avatarPath = `avatars/${userId}-${Date.now()}.${profileImage.name.split(".").pop()}`;
+
+    const { error: avatarError } = await supabase.storage
+      .from("post-images")
+      .upload(avatarPath, profileImage, {
+        contentType: profileImage.type,
+      });
+
+    if (avatarError) throw avatarError;
+
+    const { data } = supabase.storage
+      .from("post-images")
+      .getPublicUrl(avatarPath);
+
+    updateData.avatar_url = data.publicUrl;
+  }
+
+ 
+  const { error } = await supabase
+    .from("profile")
+    .update(updateData)
+    .eq("user_id", userId);
+
+  if (error) throw error;
+};
