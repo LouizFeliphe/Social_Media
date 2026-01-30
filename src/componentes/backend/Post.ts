@@ -163,3 +163,14 @@ export const PerfilPost = async (
 
   if (error) throw error;
 };
+
+export const SeguirAlguem = async (userId: string, profileId: string) => {
+
+  const {error} = await supabase.from("follows").insert({
+  follower_id: userId,
+  following_id: profileId
+});
+
+  if (error) throw new Error(error.message);
+
+}

@@ -131,3 +131,41 @@ export const fetchCategories = async () => {
       return data.tags || []
 }
 
+
+export const isUsuarioSegue = async (userId: string, profileId: string):Promise<boolean> => {
+
+  const {data,error} = await supabase
+  .from("follows")
+  .select("id")
+  .eq("follower_id", userId)
+  .eq("following_id", profileId)
+  .maybeSingle();
+
+
+  if (error) throw new Error(error.message);
+
+  return !!data
+
+}
+
+export async function contarSeguidores(userId: string): Promise<number> {
+  const { count, error } = await supabase
+    .from("follows")
+    .select("*", { count: "exact", head: true })
+    .eq("following_id", userId);
+
+  if (error) throw error;
+  return count ?? 0;
+}
+
+export async function contarSeguindo(userId: string): Promise<number> {
+  const { count, error } = await supabase
+    .from("follows")
+    .select("*", { count: "exact", head: true })
+    .eq("follower_id", userId);
+
+  if (error) throw error;
+  return count ?? 0;
+}
+
+

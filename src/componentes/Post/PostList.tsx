@@ -22,8 +22,6 @@ const PostList = ({user_id,isPostUser}: {
         },
     })    
 
-    console.log(data)
-
      if (isLoading) return <div className="mt-10">
             <Carregamento tamanho="10" texto=""/>
     </div>

@@ -11,10 +11,6 @@ const PostItem = ({ post }: {
 
   const isVideo = post?.image_url ? post.image_url.endsWith("mp4") ? true : false : false
 
-  console.log(post);
-  
-  
-
   return (
     <div className="w-[100%] sm:p-5 border-b-[1px] border-gray-600">
 
