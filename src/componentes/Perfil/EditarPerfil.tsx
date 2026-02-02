@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
-import { Svgs } from "../../../../assets/assets"
+import { Svgs } from "../../assets/assets"
 import type { Perfil } from "./interface";
-import { EditarPerfilInterface, FileChange } from "../EnviarPostinterface";
+import { EditarPerfilInterface, FileChange } from "../Post/CriarPost/EnviarPostinterface";
 
 
 export const EditarPerfil = ({ onEditar, Perfil }: {
@@ -79,7 +79,7 @@ export const EditarPerfil = ({ onEditar, Perfil }: {
                     <div className="absolute top-47 left-10 z-10 bg-[#262626] flex justify-center rounded-full border-3 border-black">
                         <img
                             src={ imageFileProfile ? URL.createObjectURL(imageFileProfile) : Perfil?.avatar_url ? Perfil.avatar_url : Svgs.noneBackground }
-                            className="h-40 w-40 rounded-full border-4 border-white brightness-45 cursor-pointer"
+                            className="h-40 w-40 rounded-full border-4 border-white brightness-45 cursor-pointer object-cover"
                             onClick={() => fileInputImageProfileRef.current?.click()}
                         />
 

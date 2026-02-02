@@ -71,7 +71,7 @@ export const ComentarioItem = ({ postId, comentario }: ComentarioItemType) => {
     const handleSubmitComentario = (e: React.FormEvent) => {
         e.preventDefault()
         if (!comentarioFormulario) return
-        mutate({ post_id: postId, conteudo: comentarioFormulario, user_id: usuario?.id || null, author: usuario?.user_metadata.name || null, pai_comentario_id: comentario.id!, avatar_url: usuario?.user_metadata.avatar_url || null })
+        mutate({ post_id: postId, conteudo: comentarioFormulario, user_id: usuario?.id || null, pai_comentario_id: comentario.id!})
         setResponder(false)
     }
 
@@ -82,8 +82,8 @@ export const ComentarioItem = ({ postId, comentario }: ComentarioItemType) => {
             <div>
                 <div className="flex max-sm:flex-col gap-5 mb-3">
                     <Link to={`/perfil/${comentario.user_id}`} className="flex items-center jsutify-center gap-5">
-                        <img src={comentario?.avatar_url ?? Svgs.user} alt="item" className={`h-10 w-10 rounded-full object-cover ${comentario?.avatar_url ?? "invert"}`} />
-                        <span className="font-bold">{comentario.author}</span>
+                        <img src={comentario.profile?.avatar_url ?? Svgs.user} alt="item" className={`h-10 w-10 rounded-full object-cover ${comentario.profile?.avatar_url ?? "invert"}`} />
+                        <span className="font-bold">{comentario.profile?.name}</span>
                     </Link>
 
                     <span className="font-light italic">{new Date(comentario.created_at!).toLocaleDateString()}</span>
@@ -94,16 +94,16 @@ export const ComentarioItem = ({ postId, comentario }: ComentarioItemType) => {
                 <div className={`mb-5 flex justify-between ${usuario?.id === comentario.user_id ? "" : "hidden"}`}>
                     <div className="flex gap-4">
                         <button onClick={handleDeletarComentario}>
-                            <img src={Svgs.lixo} alt="lixeira" className="h-5 invert" />
+                            <img src={Svgs.lixo} alt="lixeira" className="h-5 invert cursor-pointer" />
                         </button>
                         <button onClick={() => {
                             if (editar) setComentarioFormulario(comentario.conteudo)
                             setEditar((prev) => !prev)
-                        }}><img src={editar ? Svgs.xFechar : Svgs.editar} alt="editar" className="h-5 invert" /></button>
+                        }}><img src={editar ? Svgs.xFechar : Svgs.editar} alt="editar" className="h-5 invert cursor-pointer" /></button>
                         {isPendingDeletar && <Carregamento tamanho="5" texto=""/>}
                         {deletarErro && (<span className="text-red-600">Erro ao deletar</span>)}
                     </div>
-                    <button className={`${editar ? "" : "hidden"}`} onClick={handleEditarComentario}>Enviar</button>
+                    <button className={`${editar ? "" : "hidden"} cursor-pointer`} onClick={handleEditarComentario}>Enviar</button>
                     {comentario.conteudo.length > 120 && (
                         <button
                             onClick={() => setExpandido(!expandido)}
@@ -117,13 +117,13 @@ export const ComentarioItem = ({ postId, comentario }: ComentarioItemType) => {
 
                 <div className="flex gap-5">
                     <button className="font-semibold hover:underline cursor-pointer" onClick={() => setResponder((prev) => !prev)}>{`${responder ? "Sair" : "Comentar"}`}</button>
-                    <button className={`${comentario.children!.length > 0 ? "" : "hidden"} cursor-pointer`} onClick={() => setMostrarRespostas((prev) => !prev)}>{mostrarRespostas ? <img src={Svgs.abrirComentario} alt="abriComentario" className="h-7 invert" /> : <img src={Svgs.fecharComentario} className="h-7 invert" alt="abriComentario" />}</button>
+                    <button className={`${comentario.children!.length > 0 ? "" : "hidden"} cursor-pointer`} onClick={() => setMostrarRespostas((prev) => !prev)}>{mostrarRespostas ? <img src={Svgs.abrirComentario} alt="abriComentario" className="h-7 invert cursor-pointer" /> : <img src={Svgs.fecharComentario} className="h-7 invert cursor-pointer" alt="abriComentario" />}</button>
                 </div>
 
             </div>
             {responder && (
                 <form onSubmit={handleSubmitComentario} className="flex flex-col gap-3 border-t p-2">
-                    <label htmlFor="comentario">Responder <span className="ml-2 text-purple-300">{`${comentario.author}`}</span></label>
+                    <label htmlFor="comentario">Responder <span className="ml-2 text-purple-300">{`${comentario.profile?.name}`}</span></label>
                     <textarea
                         id="comentario"
                         rows={5}
@@ -133,7 +133,7 @@ export const ComentarioItem = ({ postId, comentario }: ComentarioItemType) => {
                             setComentarioFormulario(e.target.value);
                         }}
                     />
-                    <button className="flex items-center justify-center rounded-md bg-indigo-600 p-2 w-26 h-8 cursor-pointer hover:bg-indigo-700">Enviar</button>
+                    <button className={`flex items-center justify-center rounded-md ${isPending ? "bg-orange-500" : " bg-indigo-600 hover:bg-indigo-700 "} p-2 mt-3 w-26 h-8 cursor-pointer `} disabled={isPending} >{isPending ? "Carregando" : "Enviar"}</button>
                     {isPending && (<Carregamento tamanho="5" texto="" />)}
                     {error && (<span className="text-red-600">Erro ao enviar comentario</span>)}
                 </form>

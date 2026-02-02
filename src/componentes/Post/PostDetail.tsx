@@ -6,6 +6,7 @@ import type { Post, Props } from "./interface";
 import { FetchPostById } from "../backend/Get";
 import { LikeBotao } from "../Likes/likebotao";
 import { Carregamento } from "../Carregamento";
+import { Link } from "react-router";
 
 export const PostDetail = ({ postId }: Props) => {
   const { data, error, isLoading } = useQuery<Post, Error>({
@@ -39,9 +40,13 @@ export const PostDetail = ({ postId }: Props) => {
         />)}
 
       <p className="text-gray-400 md:text-justify p-10 text-left break-words md:w-[88%] max-md:w-full mb-20 mt-10 text-xl">{data?.conteudo}</p>
-      <p className="text-gray-500 text-sm">
+      <div className="flex max-sm:flex-col items-center gap-5">
+        <p className="text-gray-500 text-sm">
         Postado em: {data?.created_at ? new Date(data.created_at).toLocaleDateString() : "Data desconhecida"}
-      </p>
+        </p>
+        <Link to={`/perfil/${data?.user_id}`} className="text-gray-400 underline">By {data?.profile.name}</Link>  
+      </div>
+      
 
       <LikeBotao postId={postId} isHome={false} />
       <Comentarios postId={postId} isHome={false} />

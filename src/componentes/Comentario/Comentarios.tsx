@@ -31,15 +31,14 @@ export const Comentarios = ({postId, isHome, nomePost}: Props) => {
     
     onSuccess:()=>{
          setAbrirComentario(false)
+         setComentario("")
          queryClient.invalidateQueries({ queryKey: ["comentarios", postId] });
     }
     })
 
     const handleSubmit = (e: React.FormEvent, comentarioHome?: string) =>{
-
         e.preventDefault()     
-
-        mutate({post_id: postId, conteudo: comentarioHome || comentario, user_id: usuario?.id || null, author: usuario?.user_metadata.name || null, pai_comentario_id: null, avatar_url: usuario?.user_metadata.avatar_url || null})    
+        mutate({post_id: postId, conteudo: comentarioHome || comentario, user_id: usuario?.id || null, pai_comentario_id: null,})    
     }
 
     const ConstrutorComentario = (comentarios: Comentario[]): ComentarioArvore[] =>{
@@ -125,11 +124,11 @@ export const Comentarios = ({postId, isHome, nomePost}: Props) => {
             <form onSubmit={handleSubmit} className="mb-5 p-4">
             <div className="flex flex-col justify-center">
                 <label htmlFor="comentario" className="mb-3">Enviar Comentario</label>
-            <textarea id="comentario" rows={4} required className="p-3" placeholder="Escreva..." onChange={(e)=>{
+            <textarea id="comentario" rows={4} required value={comentario} className="p-3" placeholder="Escreva..." onChange={(e)=>{
                 setComentario(e.target.value)
             }}/>
             </div>
-            <button className="flex items-center justify-center rounded-md bg-indigo-600 p-2 mt-3 w-26 h-8 cursor-pointer hover:bg-indigo-700">Enviar</button>
+            <button className={`flex items-center justify-center rounded-md ${isPending ? "bg-orange-500" : " bg-indigo-600 hover:bg-indigo-700 "} p-2 mt-3 w-26 h-8 cursor-pointer `} disabled={isPending} >{isPending ? "Carregando..." : "Enviar"}</button>
             </form>
             {isPending || isLoading && (<Carregamento tamanho="10" texto=""/>)}
             {erroEnviar && (<span className="text-red-600 pr-3">Erro ao enviar</span>)}

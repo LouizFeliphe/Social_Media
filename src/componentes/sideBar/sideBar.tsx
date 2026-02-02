@@ -6,7 +6,7 @@ import { Link } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 import { FetchPerfil } from "../backend/Get";
 import { Carregamento } from "../Carregamento";
-import type { Perfil } from "../Post/CriarPost/Perfil/interface";
+import type { Perfil } from "../Perfil/interface";
 
 
 export const SideBar = ({ children }: {

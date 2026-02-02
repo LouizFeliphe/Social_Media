@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query"
-import type { Post } from "../../interface"
-import { FetchPerfilPosts } from "../../../backend/Get"
-import { Carregamento } from "../../../Carregamento"
-import { Svgs } from "../../../../assets/assets"
+import type { Post } from "../Post/interface"
+import { FetchPerfilPosts } from "../backend/Get"
+import { Carregamento } from "../Carregamento"
+import { Svgs } from "../../assets/assets"
 
 export const Media = ({ user_id }: {
     user_id: string
@@ -28,7 +28,7 @@ export const Media = ({ user_id }: {
 
     return (
         <>
-        { data?.length !== 0 ?
+        { data?.length !== 0 && data![0].image_url ?
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-3 p-5">
             {data?.map((post, key) => (
                 

@@ -1,16 +1,21 @@
 import { supabase } from "../../supabase"
 import type { Comentario } from "../Comentario/interface"
 import type { Like, LikePerfil } from "../Likes/interface"
-import type { Perfil } from "../Post/CriarPost/Perfil/interface"
+import type { Chats } from "../mensagem/interface"
+import type { Perfil } from "../Perfil/interface"
 import type { Post } from "../Post/interface"
 
 export const ReceberComentarios = async (postId: number) : Promise<Comentario[]> => {
 
-    const {data, error} = await supabase.from("comentarios").select("*").eq("post_id", postId).order("created_at", {ascending: false})
+    const {data, error} = await supabase.from("comentarios").select(`id,created_at,post_id,conteudo,user_id,pai_comentario_id, profile!inner (
+      name,
+      email,
+      avatar_url
+    )`).eq("post_id", postId).order("created_at", {ascending: false})
 
     if(error) throw new Error("Aconteceu um erro no fetch")
         
-    return data as Comentario[]
+    return data as unknown as Comentario[]
     
 }
 
@@ -84,13 +89,17 @@ export const FetchPosts = async (): Promise<Post[]> =>{
 export const FetchPostById = async (id: number): Promise<Post> => {
   const { data, error } = await supabase
     .from("posts")
-    .select("*")
+    .select(`id,conteudo,created_at,titulo,image_url, user_id, profile!inner (
+      name,
+      email,
+      avatar_url
+    )`)
     .eq("id", id)
     .single();
 
   if (error) throw new Error(error.message);
 
-  return data as Post;
+  return data as unknown as Post;
 };
 
 
@@ -168,4 +177,63 @@ export async function contarSeguindo(userId: string): Promise<number> {
   return count ?? 0;
 }
 
+export const pegarChatsUsuario = async (userId: string):Promise<Chats[]> =>{
 
+  const { data, error } = await supabase
+  .from("conversation_participants")
+  .select(`
+    conversation_id,
+    conversations (
+      id,
+      title,
+      is_group,
+      conversation_last_message (
+        content,
+        sender_id,
+        created_at
+      ),
+      conversation_participants (
+        user_id,
+        profile (
+          name,
+          avatar_url
+        )
+      )
+    )
+  `)
+  .eq("user_id", userId);
+
+  if (error) throw error;
+
+  return data as unknown as Chats[]
+
+}
+
+export const pegarMensagensChat = async (chatId: string) =>{
+ 
+const { data: perfils, error: error1 } = await supabase
+    .from("conversation_participants")
+    .select(`
+      profile (
+        email,
+        user_id,
+        name,
+        avatar_url
+      )
+    `)
+    .eq("conversation_id", chatId);
+
+  if (error1) throw new Error("Erro ao buscar perfis");
+
+  const { data: mensagens, error } = await supabase
+    .from("messages")
+    .select("*")
+    .eq("conversation_id", chatId);
+
+  if (error) throw new Error("Erro ao buscar mensagens");
+
+  return {
+      perfils,      
+      mensagens }
+  ;
+}

@@ -3,12 +3,13 @@ import type { Post } from "./interface";
 import { Svgs } from "../../assets/assets";
 import { Comentarios } from "../Comentario/Comentarios";
 import { LikeBotao } from "../Likes/likebotao";
+import { useState } from "react";
 
 const PostItem = ({ post }: {
   post: Post
 }) => {
   const fotoPerfil = post?.profile.avatar_url
-
+  const [expandido, setExpandido] = useState(false);
   const isVideo = post?.image_url ? post.image_url.endsWith("mp4") ? true : false : false
 
   return (
@@ -16,10 +17,10 @@ const PostItem = ({ post }: {
 
       <div className="flex gap-3">
         <Link to={`/perfil/${post.user_id}`}>
-          <img src={fotoPerfil ?? Svgs.user} alt="item" className={`h-15 w-15 max-sm:h-10 max-sm:w-10 rounded-full object-cover cursor-pointer ${fotoPerfil ?? "invert"} ml-3`} />
+          <img src={fotoPerfil ?? Svgs.user} alt="item" className={`h-15 w-15 max-sm:h-10 max-sm:w-10 rounded-full object-cover cursor-pointer flex-shrink-0 ${fotoPerfil ?? "invert"} ml-3`} />
         </Link>
-        <Link to={`/post/${post.id}`} className="" >
-          <div className="sm:pl-5 flex flex-col gap-5 max-sm:gap-1 ">
+        <div className="flex-1 min-w-0" >
+          <div className="sm:pl-5 flex flex-col gap-5 max-sm:gap-1 min-w-0 ">
             <div className="flex gap-3">
               <div className="flex flex-col">
                 <span className="font-bold text-md sm:text-xl ">{post.profile.name}</span>
@@ -27,12 +28,19 @@ const PostItem = ({ post }: {
               </div>
               <span className="text-md font-light text-gray-300">{new Date(post.created_at).toLocaleDateString()}</span>
             </div>
-            <p className="text-lg sm:leading-8 sm:text-xl font-extralight max-sm:text-left pr-4">{post?.conteudo}</p>
-
+            <Link to={`/post/${post.id}`} className={` ${expandido ? "" : "line-clamp-5"
+              } text-lg sm:leading-8 sm:text-xl font-extralight 
+            max-sm:text-left pr-4 break-words whitespace-pre-wrap`}>{post?.conteudo}</Link>
           </div>
-        </Link>
+        </div>
       </div>
-
+      {post?.conteudo.length > 250 && <button
+        onClick={() => setExpandido(!expandido)}
+        className={`text-md font-semibold text-indigo-400 hover:underline cursor-pointer w-full flex pr-5 `}
+      >
+        <div className="flex-1"></div>
+        {expandido ? "Ler menos" : "Ler mais"}
+      </button>}
       {post?.image_url && (<div>
         {isVideo ? (<video
           src={post.image_url}

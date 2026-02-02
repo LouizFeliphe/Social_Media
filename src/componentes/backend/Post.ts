@@ -33,20 +33,15 @@ export const CriarPostBackend = async (post: PostInput, imageFile: File | null )
 
 }
 
-export const EnviarComentario = async ({post_id, conteudo, user_id, author, pai_comentario_id, avatar_url}: Comentario): Promise<void> =>{
+export const EnviarComentario = async ({post_id, conteudo, user_id,  pai_comentario_id }: Comentario): Promise<void> =>{
 
-    if(!user_id || !author) {
-        console.log(user_id, author);
-        
-        throw new Error("Usuario nao autenticado")}
+    if(!user_id) throw new Error("Usuario nao autenticado")
 
     const { error } = await supabase.from("comentarios").insert({
         post_id,
         conteudo,
         user_id,
-        author, 
-        pai_comentario_id,
-        avatar_url
+        pai_comentario_id, 
     })
 
     if( error ) throw new Error("Aconteceu um erro ao enviar")
@@ -169,6 +164,33 @@ export const SeguirAlguem = async (userId: string, profileId: string) => {
   const {error} = await supabase.from("follows").insert({
   follower_id: userId,
   following_id: profileId
+});
+
+  if (error) throw new Error(error.message);
+
+}
+
+
+export const openPrivateChat = async (userID: string, otherUserId: string) => {
+  
+  const { error } = await supabase.rpc("create_conversation", {
+    creator_id: userID,
+    participant_ids: [otherUserId],
+    is_group: false,
+    title: null
+  });
+
+  if (error) throw error;
+
+}
+
+
+export const EnviarMensagem = async (chatId: string, senderId: string, conteudo: string) => {
+
+  const {error} = await supabase.from("messages").insert({
+  conversation_id: chatId,
+  sender_id: senderId,
+  content: conteudo,
 });
 
   if (error) throw new Error(error.message);

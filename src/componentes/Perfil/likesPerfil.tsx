@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query"
-import { fecthVotesPerfil} from "../../../backend/Get"
-import type { LikePerfil } from "../../../Likes/interface"
-import PostItem from "../../postItem"
-import type { Post } from "../../interface"
-import { Carregamento } from "../../../Carregamento"
-import { Svgs } from "../../../../assets/assets"
+import { fecthVotesPerfil} from "../backend/Get"
+import type { LikePerfil } from "../Likes/interface"
+import PostItem from "../Post/postItem"
+import type { Post } from "../Post/interface"
+import { Carregamento } from "../Carregamento"
+import { Svgs } from "../../assets/assets"
 
 export const LikesPerfil = ({user_id}:{
     user_id: string

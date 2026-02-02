@@ -24,6 +24,7 @@ export const PostPagina = () =>{
         try {
             await MutateOptionsBackend.IniciarEnvio({titulo: titulo ? titulo : usuario?.user_metadata.name || "Post", conteudo, imageFile: imageFile, user_id: usuario!.id})
             setConteudo("")
+            setTitulo("")
             setImageFile(null)
         }
         catch{
@@ -67,6 +68,7 @@ export const PostPagina = () =>{
                                 id="titulo"
                                 name="titulo"
                                 type="text"
+                                value={titulo}
                                 placeholder="Pensar ou Não Pensar..."
                                 className="block min-w-0 grow bg-transparent py-1.5 pr-3 pl-1 text-base text-white placeholder:text-gray-500 focus:outline-none sm:text-sm/6"
                                 maxLength={20}
@@ -87,7 +89,7 @@ export const PostPagina = () =>{
                             name="conteudo"
                             rows={7}
                             className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
-                            defaultValue={''}
+                            value={conteudo}
                             required
                             onChange={(e) => setConteudo(e.target.value)}
                         />

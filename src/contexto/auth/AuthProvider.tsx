@@ -17,20 +17,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         })
     }
 
-    // async function uploadAvatar(userId: string, file: File) {
-    //     const { error } = await supabase.storage
-    //         .from('avatares')
-    //         .upload(`${userId}.jpg`, file, { upsert: true })
-
-    //     if (error) throw error
-
-    //     const { data } = supabase.storage
-    //         .from('avatares')
-    //         .getPublicUrl(`${userId}.png`)
-
-    //     return data.publicUrl
-    // }
-
     const signUp = async (email: string, password: string, name: string): Promise<{
          user: User | null;
         session: Session | null;

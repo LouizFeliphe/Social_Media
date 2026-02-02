@@ -6,7 +6,7 @@ import { Carregamento } from "../../Carregamento";
 import { GifTab } from "./GifComponente/GifsComponente";
 import { useQuery } from "@tanstack/react-query";
 import { FetchPerfil } from "../../backend/Get";
-import type { Perfil } from "./Perfil/interface";
+import type { Perfil } from "../../Perfil/interface";
 
 export const PostHome = ({ isComentarioPost, onClicar }: {
     isComentarioPost: boolean

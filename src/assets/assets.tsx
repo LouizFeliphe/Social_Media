@@ -30,6 +30,7 @@ import teste2 from './teste2.jpg'
 import noneBackground from './noneBackground.jpg'
 import local from './local.svg'
 import calendar from './calendar.svg'
+import messsage from './message.svg'
 
 
 export const Svgs = {
@@ -64,5 +65,6 @@ export const Svgs = {
     teste2: teste2,
     noneBackground: noneBackground,
     local: local,
-    calendar: calendar
+    calendar: calendar,
+    messsage: messsage
 }

@@ -1,16 +1,16 @@
-import { useParams } from "react-router";
-import { contarSeguidores, contarSeguindo, FetchPerfil, isUsuarioSegue } from "../../../backend/Get";
+import { useNavigate, useParams } from "react-router";
+import { contarSeguidores, contarSeguindo, FetchPerfil, isUsuarioSegue } from "../backend/Get";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Carregamento } from "../../../Carregamento";
-import { Svgs } from "../../../../assets/assets";
+import { Carregamento } from "../Carregamento";
+import { Svgs } from "../../assets/assets";
 import { useState } from "react";
 import { EditarPerfil } from "./EditarPerfil";
-import PostList from "../../PostList";
+import PostList from "../Post/PostList";
 import { Media } from "./media";
 import { LikesPerfil } from "./likesPerfil";
-import { useAuth } from "../../../../contexto/auth/useAuth";
-import { SeguirAlguem } from "../../../backend/Post";
-import { DeixarSeguir } from "../../../backend/Delete";
+import { useAuth } from "../../contexto/auth/useAuth";
+import { openPrivateChat, SeguirAlguem } from "../backend/Post";
+import { DeixarSeguir } from "../backend/Delete";
 
 export const Perfil = () => {
 
@@ -19,6 +19,7 @@ export const Perfil = () => {
     const [activeTab, setActiveTab] = useState("Posts")
     const { usuario } = useAuth()
     const queryClient = useQueryClient()
+    const navegar = useNavigate()
 
     const { data: Perfil, error, isLoading: isLoadingPerfil } = useQuery({
         queryKey: ["perfil", userId], queryFn: ({ queryKey }) => {
@@ -84,6 +85,12 @@ export const Perfil = () => {
         queryFn: () => contarSeguindo(userId!)
     });
 
+    const {mutate:mutateIniciarChat, isPending: isIniciarChatLoading, isError: isIniciarChatErro} = useMutation({mutationFn: (data: {userID: string, otherUserId: string})=>{
+        return openPrivateChat(data.userID,data.otherUserId)
+    },onSuccess: ()=>{
+        navegar('/box_message')
+    }})
+
 
     if (error) {
         return (
@@ -109,15 +116,22 @@ export const Perfil = () => {
             <img src={Perfil?.background ?? Svgs.anarchy} alt="cover" className="w-full p-1.5 h-90 object-cover" />
             <div className="w-full flex pt-3 mb-5">
                 <div className="flex-1"></div>
-
-                {usuario?.id === userId ? <button onClick={() => setEditar((prev) => !prev)} className="py-3 px-2.5 rounded-lg sm:text-2xl text-xl sm:mr-20 mr-5 text-white border cursor-pointer hover:bg-indigo-800">Editar Perfil</button> : isSeguindo ? <button onClick={() => {
+                
+                {usuario?.id !== userId && (          <button onClick={()=> {
+                    if(usuario?.id && userId) mutateIniciarChat({userID: usuario.id, otherUserId: userId})
+                    }} className={`py-3 px-5 rounded-2xl sm:text-2xl text-xl sm:mr-20 mr-5 text-white border cursor-pointer ${ isIniciarChatLoading ?"bg-orange-600": "hover:bg-indigo-800"}`} disabled={isIniciarChatLoading}>{isIniciarChatLoading ? "Carregando" : <img src={Svgs.post} alt="mais" className="h-8 invert" />}
+                </button>
+                )}
+                {usuario?.id === userId ? (
+                <button onClick={() => setEditar((prev) => !prev)} className="py-3 px-2.5 rounded-lg sm:text-2xl text-xl sm:mr-20 mr-5 text-white border cursor-pointer hover:bg-indigo-800">Editar Perfil</button>) : isSeguindo ? <button onClick={() => {
                     if(!isloadingUnfollow) mutateUnfollow()
                 }} className={`py-3 px-2.5 rounded-lg sm:text-2xl text-xl sm:mr-20 mr-5 text-white border cursor-pointer ${isloadingUnfollow ? "bg-orange-500" : "hover:bg-indigo-800"}`}>{isloadingUnfollow ? "Carregando": "Unfollow"}</button> : <button onClick={() => {
                     if(!isloadingFollow) mutateFollow()
                 }} className={`py-3 px-2.5 rounded-lg sm:text-2xl text-xl sm:mr-20 mr-5 text-white border cursor-pointer ${isloadingFollow ? "bg-orange-500" : "hover:bg-indigo-800"}`}>{isloadingUnfollow ? "Carregando": "Seguir"}</button>}
+              
             </div>
             <div className="absolute sm:top-50 sm:left-8 top-70 left-3 z-10 bg-[#262626] flex justify-center rounded-full border-3 border-black">
-                <img src={Perfil?.avatar_url ?? Svgs.user} className="sm:h-55 sm:w-55 h-35 w-35 rounded-full border-4 border-white" />
+                <img src={Perfil?.avatar_url ?? Svgs.user} className="sm:h-55 sm:w-55 h-35 w-35 rounded-full border-4 border-white object-cover" />
             </div>
             <div className="sm:ml-2 flex flex-col justify-center sm:pl-10 pl-3 gap-5">
                 <span className="text-3xl font-bold">{Perfil?.name}</span>
@@ -148,6 +162,7 @@ export const Perfil = () => {
             </div>
              {isErrorFollow && <div className="text-red-600 w-full my-5 text-center sm:text-lg">Erro ao seguir usuario</div>}
              {isErrorUnfollow && <div className="text-red-600 w-full my-5 text-center sm:text-lg">Erro no Unfollow</div>}
+             {isIniciarChatErro && <div className="text-red-600 w-full my-5 text-center sm:text-lg">Erro ao iniciar chat</div>}
             <div className="border-b border-zinc-800 mt-10">
                 <div className="flex justify-around text-xl font-semibold text-zinc-500">
                     {tabs.map((tab) => (

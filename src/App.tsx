@@ -13,8 +13,10 @@ import { ScrollToTop } from "./paginas/Scroll"
 import { ConfirmarEmail } from "./componentes/SignInUp/ConfirmarEmail"
 import { SignUp } from "./componentes/SignInUp/SignUp"
 import { SignIn } from "./componentes/SignInUp/SignIn"
-import { Perfil } from "./componentes/Post/CriarPost/Perfil/Perfil"
+import { Perfil } from "./componentes/Perfil/Perfil"
 import { useRef } from "react"
+import { BoxMessage } from "./componentes/mensagem/BoxMessage"
+import { Chat } from "./componentes/mensagem/Chat"
 
 
 
@@ -33,6 +35,7 @@ export const App = () => {
           <SideBar>
             <SidebarItem icon={Svgs.home} text="Home" link="/" />
             <SidebarItem icon={Svgs.post} text="Criar Post" link="/criar" />
+            <SidebarItem icon={Svgs.messsage} text="Caixa de Mensagem" link="/box_message" />
             <SidebarItem icon={Svgs.comunidade} text="Comunidades" link="/comunidades" />
             <SidebarItem icon={Svgs.criarComunidade} text="Criar Comunidades" link="/comunidade/criar" />
           </SideBar>
@@ -47,6 +50,8 @@ export const App = () => {
               <Route path="/signup" element={<SignUp/>}/>
               <Route path="/signin" element={<SignIn/>}/>
               <Route path="/perfil/:userId" element={<Perfil/>}/>
+              <Route path="/box_message" element={<BoxMessage/>}/>
+              <Route path="/chat/:chatId" element={<Chat/>}/>
             </Routes>
           </main>
         </div>
