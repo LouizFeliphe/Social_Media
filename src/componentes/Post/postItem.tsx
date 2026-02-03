@@ -8,6 +8,7 @@ import { useState } from "react";
 const PostItem = ({ post }: {
   post: Post
 }) => {
+  
   const fotoPerfil = post?.profile.avatar_url
   const [expandido, setExpandido] = useState(false);
   const isVideo = post?.image_url ? post.image_url.endsWith("mp4") ? true : false : false

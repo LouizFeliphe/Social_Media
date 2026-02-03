@@ -14,22 +14,21 @@ import { ConfirmarEmail } from "./componentes/SignInUp/ConfirmarEmail"
 import { SignUp } from "./componentes/SignInUp/SignUp"
 import { SignIn } from "./componentes/SignInUp/SignIn"
 import { Perfil } from "./componentes/Perfil/Perfil"
-import { useRef } from "react"
-import { BoxMessage } from "./componentes/mensagem/BoxMessage"
+import { BoxMessage } from "./paginas/BoxMessage"
 import { Chat } from "./componentes/mensagem/Chat"
+import { ScrollProvider } from "./contexto/scroll/scrollProvider"
+import { Layout } from "./paginas/Layout"
 
 
 
 export const App = () => {
   const cliente = new QueryClient()
-  const mainRef = useRef<HTMLElement>(null);
 
   return (
     <QueryClientProvider client={cliente}>
     <BrowserRouter>
     <AuthProvider>
       <SidebarProvider>
-      <div className="">
         <NavBar />
         <div className="pt-16 h-screen flex bg-black text-gray-100">
           <SideBar>
@@ -39,9 +38,9 @@ export const App = () => {
             <SidebarItem icon={Svgs.comunidade} text="Comunidades" link="/comunidades" />
             <SidebarItem icon={Svgs.criarComunidade} text="Criar Comunidades" link="/comunidade/criar" />
           </SideBar>
-
-          <main ref={mainRef} className="flex-1 overflow-y-auto overscroll-y-contain" >
-            <ScrollToTop scrollRef={mainRef} />
+        <ScrollProvider>
+           <Layout>
+            <ScrollToTop/>
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/criar" element={<CriarPost/>}/>
@@ -53,9 +52,9 @@ export const App = () => {
               <Route path="/box_message" element={<BoxMessage/>}/>
               <Route path="/chat/:chatId" element={<Chat/>}/>
             </Routes>
-          </main>
+          </Layout>
+        </ScrollProvider>
         </div>
-      </div>
       </SidebarProvider>
     </AuthProvider>
     </BrowserRouter>

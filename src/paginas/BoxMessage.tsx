@@ -1,20 +1,27 @@
 import { useQuery } from "@tanstack/react-query"
-import { useAuth } from "../../contexto/auth/useAuth"
-import { pegarChatsUsuario } from "../backend/Get"
-import { Svgs } from "../../assets/assets"
-import type { Chats } from "./interface"
-import { ChatIcone } from "./ChatIcone"
-import { Carregamento } from "../Carregamento"
+import { useAuth } from "../contexto/auth/useAuth"
+import { pegarChatsUsuario } from "../componentes/backend/Get"
+import { Svgs } from "../assets/assets"
+import type { Chats } from "../componentes/mensagem/interface"
+import { ChatIcone } from "../componentes/mensagem/ChatIcone"
+import { Carregamento } from "../componentes/Carregamento"
+import { useNavigate } from "react-router"
+import { useEffect } from "react"
 
 
 export const BoxMessage = () => {
     
     const {usuario} = useAuth()
+    const navegar = useNavigate()
 
     const {data:Chats,error,isLoading} = useQuery<Chats[]>({enabled: !!usuario?.id,queryKey:["chats",usuario?.id], queryFn: ({queryKey})=>{
         const [,usuarioId] = queryKey
         return pegarChatsUsuario(usuarioId! as string)
     }})
+
+    useEffect(()=>{
+        if(!usuario?.user_metadata) navegar("/signin")
+    },[navegar,usuario])
 
     // useEffect(() => {
     //     const channel = supabase
@@ -47,6 +54,7 @@ export const BoxMessage = () => {
         return <div className="text-red-600 w-full text-center mt-10">Erro ao carregar os Chats</div>
     }
 
+   
 
     return (
     <div className="flex flex-col justify-center p-5 mb-18">

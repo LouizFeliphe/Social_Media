@@ -71,7 +71,7 @@ export const ComentarioItem = ({ postId, comentario }: ComentarioItemType) => {
     const handleSubmitComentario = (e: React.FormEvent) => {
         e.preventDefault()
         if (!comentarioFormulario) return
-        mutate({ post_id: postId, conteudo: comentarioFormulario, user_id: usuario?.id || null, pai_comentario_id: comentario.id!})
+        mutate({ post_id: postId, conteudo: comentarioFormulario, user_id: usuario?.id || null, pai_comentario_id: comentario.id! })
         setResponder(false)
     }
 
@@ -91,19 +91,19 @@ export const ComentarioItem = ({ postId, comentario }: ComentarioItemType) => {
                 <textarea value={comentarioFormulario} className={`mb-4 p-5 bg-white/5 outline-2 -outline-offset-1 outline-indigo-400 focus-within:outline-3 focus-within:-outline-offset-2 focus-within:outline-indigo-600 w-full h-50 ${editar ? "" : "hidden"}`} onChange={(e) => setComentarioFormulario(e.target.value)} />
                 <p className={`mb-4 p-5 text-justify ${expandido ? "" : "line-clamp-3"
                     } ${editar ? "hidden" : ""}`}>{comentario.conteudo}</p>
-                <div className={`mb-5 flex justify-between ${usuario?.id === comentario.user_id ? "" : "hidden"}`}>
+                <div className={`mb-5 flex justify-between`}>
                     <div className="flex gap-4">
                         <button onClick={handleDeletarComentario}>
-                            <img src={Svgs.lixo} alt="lixeira" className="h-5 invert cursor-pointer" />
+                            <img src={Svgs.lixo} alt="lixeira" className={`${usuario?.id === comentario.user_id ? "" : "hidden"} h-5 invert cursor-pointer`} />
                         </button>
                         <button onClick={() => {
                             if (editar) setComentarioFormulario(comentario.conteudo)
                             setEditar((prev) => !prev)
-                        }}><img src={editar ? Svgs.xFechar : Svgs.editar} alt="editar" className="h-5 invert cursor-pointer" /></button>
-                        {isPendingDeletar && <Carregamento tamanho="5" texto=""/>}
+                        }}className={`${usuario?.id === comentario.user_id ? "" : "hidden"}`}><img src={editar ? Svgs.xFechar : Svgs.editar} alt="editar" className="h-5 invert cursor-pointer" /></button>
+                        {isPendingDeletar && <Carregamento tamanho="5" texto="" />}
                         {deletarErro && (<span className="text-red-600">Erro ao deletar</span>)}
                     </div>
-                    <button className={`${editar ? "" : "hidden"} cursor-pointer`} onClick={handleEditarComentario}>Enviar</button>
+                    <button className={`${editar ? "" : "hidden"} cursor-pointer ${usuario?.id === comentario.user_id ? "" : "hidden"}`} onClick={handleEditarComentario}>Enviar</button>
                     {comentario.conteudo.length > 120 && (
                         <button
                             onClick={() => setExpandido(!expandido)}

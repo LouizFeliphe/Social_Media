@@ -1,7 +1,7 @@
 import { supabase } from "../../supabase"
 import type { Comentario } from "../Comentario/interface"
 import type { Like, LikePerfil } from "../Likes/interface"
-import type { Chats } from "../mensagem/interface"
+import type { Chats, Perfil_Mensagem } from "../mensagem/interface"
 import type { Perfil } from "../Perfil/interface"
 import type { Post } from "../Post/interface"
 
@@ -209,7 +209,7 @@ export const pegarChatsUsuario = async (userId: string):Promise<Chats[]> =>{
 
 }
 
-export const pegarMensagensChat = async (chatId: string) =>{
+export const pegarMensagensChat = async (chatId: string): Promise<Perfil_Mensagem> =>{
  
 const { data: perfils, error: error1 } = await supabase
     .from("conversation_participants")
@@ -234,6 +234,6 @@ const { data: perfils, error: error1 } = await supabase
 
   return {
       perfils,      
-      mensagens }
+      mensagens } as unknown as Perfil_Mensagem
   ;
 }

@@ -25,12 +25,12 @@ import like from './like.svg'
 import correto from './correto.svg'
 import email from './email.svg'
 import google from './google.svg'
-import teste from './teste.jfif'
-import teste2 from './teste2.jpg'
 import noneBackground from './noneBackground.jpg'
 import local from './local.svg'
 import calendar from './calendar.svg'
 import messsage from './message.svg'
+import setaBaixo from './setaBaixo.svg'
+import setaCima from './setaCima.svg'
 
 
 export const Svgs = {
@@ -61,10 +61,10 @@ export const Svgs = {
     correto: correto,
     email: email,
     google: google,
-    teste: teste,
-    teste2: teste2,
     noneBackground: noneBackground,
     local: local,
     calendar: calendar,
-    messsage: messsage
+    messsage: messsage,
+    setaBaixo: setaBaixo,
+    setaCima: setaCima
 }

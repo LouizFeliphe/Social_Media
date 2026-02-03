@@ -1,16 +1,14 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router";
+import { useScroll } from "../contexto/scroll/useScroll";
 
 
-interface Props {
-  scrollRef: React.RefObject<HTMLElement | null>;
-}
-
-export function ScrollToTop({ scrollRef }: Props) {
+export function ScrollToTop() {
   const { pathname } = useLocation();
+  const { scrollRef } = useScroll()
 
   useEffect(() => {
-    scrollRef.current?.scrollTo({
+    if(scrollRef) scrollRef.current?.scrollTo({
       top: 0,
       behavior: "auto",
     });
