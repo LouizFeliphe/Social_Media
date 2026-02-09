@@ -1,4 +1,4 @@
-export interface Chats{
+export interface Chat{
     conversation_id: string
     conversations: {
         conversation_last_message: Mensagem[],

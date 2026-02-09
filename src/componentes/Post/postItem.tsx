@@ -9,6 +9,8 @@ const PostItem = ({ post }: {
   post: Post
 }) => {
   
+  console.log(post);
+  
   const fotoPerfil = post?.profile.avatar_url
   const [expandido, setExpandido] = useState(false);
   const isVideo = post?.image_url ? post.image_url.endsWith("mp4") ? true : false : false

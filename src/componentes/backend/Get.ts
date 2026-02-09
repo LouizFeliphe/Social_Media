@@ -1,7 +1,7 @@
 import { supabase } from "../../supabase"
 import type { Comentario } from "../Comentario/interface"
 import type { Like, LikePerfil } from "../Likes/interface"
-import type { Chats, Perfil_Mensagem } from "../mensagem/interface"
+import type { Chat, Perfil_Mensagem } from "../mensagem/interface"
 import type { Perfil } from "../Perfil/interface"
 import type { Post } from "../Post/interface"
 
@@ -78,7 +78,7 @@ export const FetchPosts = async (): Promise<Post[]> =>{
       name,
       email,
       avatar_url
-    )`).order("created_at",{ascending: false})
+    )`).order("created_at",{ascending: false}).limit(10)
 
     if (error) throw new Error(error.message)
     
@@ -177,7 +177,7 @@ export async function contarSeguindo(userId: string): Promise<number> {
   return count ?? 0;
 }
 
-export const pegarChatsUsuario = async (userId: string):Promise<Chats[]> =>{
+export const pegarChatsUsuario = async (userId: string):Promise<Chat[]> =>{
 
   const { data, error } = await supabase
   .from("conversation_participants")
@@ -205,7 +205,7 @@ export const pegarChatsUsuario = async (userId: string):Promise<Chats[]> =>{
 
   if (error) throw error;
 
-  return data as unknown as Chats[]
+  return data as unknown as Chat[]
 
 }
 

@@ -1,15 +1,17 @@
 import { NavLink } from "react-router";
 import { useSidebar } from "../../contexto/sideBar/useSideBar";
+import { useAuth } from "../../contexto/auth/useAuth";
 
 
-export const SidebarItem = ({ icon, text, link, alert, }: {
+export const SidebarItem = ({ icon, text, link }: {
     icon: string
     text: string
-    link: string
-    alert?: boolean
+    link?: string
 }) => {
 
     const {expandir, toggle} = useSidebar()
+    const {temMensagemNova} = useAuth()
+    const {usuario} = useAuth()
 
     return (
         <li className="W-full py-2  px-3 my-1 font-medium rounded-md cursor-pointer">
@@ -17,7 +19,7 @@ export const SidebarItem = ({ icon, text, link, alert, }: {
                 onClick={()=> {
                     if(window.innerWidth < 1024) toggle()
                 }}
-                to={link}
+                to={link ? link : usuario?.id ? `/perfil/${usuario?.id}` : "/signin"}
                 className={({ isActive }) =>
                     `
             w-full h-10 relative flex items-center p-4 transition-colors rounded-md
@@ -37,7 +39,7 @@ export const SidebarItem = ({ icon, text, link, alert, }: {
                     {text}
                 </span>
 
-                {alert && (
+                {text === "Caixa de Mensagem" && temMensagemNova && (
                     <div
                         className={`absolute right-2 w-2 h-2 rounded bg-indigo-400 ${expandir ? "" : "top-2"
                             }`}

@@ -1,26 +1,30 @@
 import { useEffect, useRef, useState } from "react";
 import { Svgs } from "../../assets/assets";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, 
+// useQueryClient 
+} from "@tanstack/react-query";
 import { EnviarMensagem } from "../backend/Post";
 import { useAuth } from "../../contexto/auth/useAuth";
 import { Carregamento } from "../Carregamento";
 import type { Mensagem } from "./interface";
 import { useScroll } from "../../contexto/scroll/useScroll";
 
+
+
 export const Mensagens = ({ mensagens, chatID }: {
     mensagens: Mensagem[],
     chatID: string,
 }) => {
-    const { usuario } = useAuth()
+    const { usuario, rastrearDigitacao, usuariosDigitando } = useAuth()
     const [texto, setTexto] = useState("")
-    const useQuery = useQueryClient()
+    // const useQuery = useQueryClient()
     const bottomRef = useRef<HTMLDivElement | null>(null)
     const [showScrollDown, setShowScrollDown] = useState(false)
     const { scrollRef } = useScroll()
-    const [expandido, setExpandido] = useState(false);
+    const [expandedMap, setExpandedMap] = useState<Record<string, boolean>>({});
     const [erroMensagem, setErroMensagem] = useState<string | null>(null)
-
-
+    const isDigitandoRef = useRef(false)
+    const digitandoTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
     useEffect(() => {
         const el = scrollRef?.current
@@ -52,7 +56,7 @@ export const Mensagens = ({ mensagens, chatID }: {
     }, [erroMensagem])
 
 
-    const { mutate, error, isPending } = useMutation({
+    const { mutate, isPending } = useMutation({
         mutationFn: (data: {
             chatId: string,
             senderId: string,
@@ -61,7 +65,7 @@ export const Mensagens = ({ mensagens, chatID }: {
             return EnviarMensagem(data.chatId, data.senderId, data.conteudo)
         }, onSuccess: () => {
             setTexto("")
-            useQuery.invalidateQueries({ queryKey: ["messages"] })
+            // useQuery.invalidateQueries({ queryKey: ["messages"] })
         }, onError: () => {
             setErroMensagem("Erro ao enviar a mensagem. Tente novamente.")
         },
@@ -73,21 +77,33 @@ export const Mensagens = ({ mensagens, chatID }: {
         if (usuario?.user_metadata) mutate({ chatId: chatID, senderId: usuario?.id, conteudo: texto })
     }
 
-    const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const handleChange = async (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setTexto(e.target.value)
         e.target.style.height = "auto"
         e.target.style.height = `${e.target.scrollHeight}px`
+
+        if(!isDigitandoRef.current){
+            await rastrearDigitacao(chatID, true)
+            isDigitandoRef.current = true
+        }
+
+        if(digitandoTimeoutRef.current) clearTimeout(digitandoTimeoutRef.current)
+        
+        digitandoTimeoutRef.current = setTimeout(async ()=>{
+            if(!isDigitandoRef.current) return
+            await rastrearDigitacao(chatID, false)
+            isDigitandoRef.current = false
+        },2000)
     }
 
-    if (error) {
-        return <div className="text-red-600 w-full text-center mt-10">Erro ao carregar as mensagens</div>
-    }
+    const PessoasDigitando = usuariosDigitando.filter((u) => u.chatId === chatID && u.userId !== usuario?.id)
 
     return (
         <>
             <div className="flex flex-col gap-2 sm:px-7 sm:p-6 max-sm:mb-4">
                 {mensagens.map(message => {
                     const isMine = message.sender_id === usuario?.id
+                    const isExpanded = !!expandedMap[message.id]
 
                     return (
                         <div key={message.id} className="max-sm:px-2">
@@ -102,7 +118,7 @@ export const Mensagens = ({ mensagens, chatID }: {
                 px-4 py-2
                 sm:text-lg
                 break-words
-                ${expandido ? "" : "line-clamp-5"}
+                ${isExpanded ? "" : "line-clamp-5"}
                 ${isMine
                                             ? "bg-blue-500 text-white rounded-br-sm"
                                             : "bg-zinc-200 text-zinc-900 rounded-bl-sm"}
@@ -112,12 +128,12 @@ export const Mensagens = ({ mensagens, chatID }: {
                                 </div>
                             </div>
                             {message?.content.length > 250 && <button
-                                onClick={() => setExpandido(!expandido)}
+                                onClick={() => setExpandedMap(prev => ({ ...prev, [message.id]: !isExpanded }))}
                                 className={`text-md font-semibold text-indigo-400 hover:underline cursor-pointer w-full flex pr-5 `}
                             >
                                 {isMine ? (<><div className="flex-1"></div>
-                                {expandido ? "Ler menos" : "Ler mais"}</>) : (<>
-                                {expandido ? "Ler menos" : "Ler mais"}
+                                {isExpanded ? "Ler menos" : "Ler mais"}</>) : (<>
+                                {isExpanded ? "Ler menos" : "Ler mais"}
                                 <div className="flex-1"></div>
                                 </>)}
                             </button>}
@@ -133,12 +149,25 @@ export const Mensagens = ({ mensagens, chatID }: {
             )}
 
 
-            <div className="sm:p-5">
-                <div className="w-full bg-[#202327] flex items-center justify-between sm:rounded-xl">
+            <div className="sm:p-5 max-sm:mb-2">
+                {PessoasDigitando.length > 0 && (
+                    <span className="m-0 text-sm max-sm:pl-3 text-white">
+                        {PessoasDigitando.length === 1 || PessoasDigitando.length === 2
+                            ? "Digitando..."
+                            : `${PessoasDigitando.length} Pessoas estão digitando...`}
+                    </span>
+                )}
+                <div className="w-full bg-[#202327] flex items-center justify-between sm:rounded-xl mt-5">
                     <textarea
                         value={texto}
                         onChange={handleChange}
                         rows={1}
+                        onKeyDown={(e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+                            if (e.key === 'Enter' && !e.shiftKey) {
+                                e.preventDefault()
+                                handleSubmit(e)
+                            }
+                        }}
                         placeholder="Digite..."
                         className="
                          w-full

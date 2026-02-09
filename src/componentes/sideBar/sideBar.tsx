@@ -56,7 +56,7 @@ export const SideBar = ({ children }: {
             duration-200
             ${expandir ? "max-lg:translate-x-0" : "max-lg:translate-x-full"}
             `}>
-                <nav className="h-full max-sm:h-[80%] flex flex-col bg-[#0E1113] lg:border-r max-lg:border-l max-lg:border-t max-sm:border-b shadow-sm gap-3">
+                <nav className="h-full max-sm:h-[95%] flex flex-col bg-[#0E1113] lg:border-r max-lg:border-l max-lg:border-t max-sm:border-b shadow-sm gap-3">
                     <div className="p-4 pb-2 flex justify-between items-center max-md:hidden">
                         <h2 className={`text-xl overflow-hidden transition-all duration-500 ${expandir ? "text-xl ml-3" : "w-0"}`}>Opções</h2>
                         <button className="p-1.5 mr-3.5 rounded-lg bg-gray-50 hover:bg-gray-100" onClick={() => toggle()}>
