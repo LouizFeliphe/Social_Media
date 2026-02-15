@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import PostItem from "./postItem.tsx"
-import { FetchPerfilPosts, FetchPosts } from "../backend/Get"
+import { FetchPerfilPosts, FetchPostById, FetchPosts } from "../backend/Get"
 import type { Post } from "./interface"
 import { Carregamento } from "../Carregamento.tsx"
 import { Svgs } from "../../assets/assets.tsx"
@@ -28,8 +28,8 @@ const PostList = ({ user_id, isPostUser }: {
 
 
     useEffect(() => {
-        
-        if(isPostUser) return
+
+        if (isPostUser) return
 
         const channel = supabase
             .channel("posts-realtime")
@@ -43,21 +43,20 @@ const PostList = ({ user_id, isPostUser }: {
                 payload => {
                     const novoPost = payload.new as Post
 
-                    queryClient.setQueryData<Post[]>(
-                        ["posts", user_id, isPostUser],
-                        (old) => {
-                            if (!old) return [novoPost]
+                    FetchPostById(novoPost.id).then(postCompleto => {
+                        queryClient.setQueryData<Post[]>(
+                            ["posts", user_id, isPostUser],
+                            (old) => {
+                                if (!old) return [postCompleto]
 
-                            
-                            if (old.some(p => p.id === novoPost.id)) {
-                                return old
+                                if (old.some(p => p.id === postCompleto.id)) {
+                                    return old
+                                }
+
+                                return [postCompleto, ...old].slice(0, 10)
                             }
-
-                            console.log([novoPost, ...old].slice(0, 10));
-                            
-                            return [novoPost, ...old].slice(0, 10)
-                        }
-                    )
+                        )
+                    })
                 }
             )
             .subscribe()

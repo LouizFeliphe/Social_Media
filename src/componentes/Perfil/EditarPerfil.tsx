@@ -54,7 +54,7 @@ export const EditarPerfil = ({ onEditar, Perfil }: {
       overflow-y-auto">
                 <div className="flex justify-between pb-2">
                     <div className="flex items-center justify-center gap-5">
-                        <button type="submit" onClick={onEditar}><img src={Svgs.xFechar} alt="fechar" className="h-8 invert" /></button>
+                        <button type="submit" onClick={onEditar}><img src={Svgs.xFechar} alt="fechar" className="h-8 invert cursor-pointer" /></button>
                         <span className="text-xl">EditarPerfil</span>
                     </div>
                     {MutateOptionsBackend.isPending ? <button type="submit" className="rounded-lg py-1.5 px-4.5 border-2 border-white text-lg bg-yellow-600" disabled={true}>Carregando...</button> : <button type="submit" className="rounded-lg py-1.5 px-4.5   border-2 border-white text-lg hover:bg-gray-600">Salvar</button>}

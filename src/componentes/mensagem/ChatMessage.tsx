@@ -48,7 +48,9 @@ export const ChatMessage = ({ data, chatId }: {
                 return (
                     <Fragment key={index}>
                         <div className="fixed bg-black w-[90%] flex items-center gap-4 p-2 max-sm:hidden">
-                            <img src={Svgs.xFechar} alt="fechar" className="h-10 invert" />
+                            <img src={Svgs.xFechar} alt="fechar" className="h-10 invert cursor-pointer" onClick={()=>{
+                                navegar("/box_message")
+                            }}/>
                             <img
                                 src={perfil.profile.avatar_url}
                                 className="h-13 w-13 object-cover rounded-full border-1 border-[#232a2e]"

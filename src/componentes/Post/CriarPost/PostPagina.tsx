@@ -26,6 +26,7 @@ export const PostPagina = () =>{
             setConteudo("")
             setTitulo("")
             setImageFile(null)
+            navegar("/")
         }
         catch{
             console.log("Erro ao enviar");   

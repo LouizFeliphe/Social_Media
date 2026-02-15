@@ -33,7 +33,6 @@ export const App = () => {
             <SidebarItem icon={Svgs.home} text="Home" link="/" />
             <SidebarItem icon={Svgs.post} text="Criar Post" link="/criar" />
             <SidebarItem icon={Svgs.messsage} text="Caixa de Mensagem" link="/box_message"/>
-            <SidebarItem icon={Svgs.comunidade} text="Comunidades" link="/comunidades" />
             <SidebarItem icon={Svgs.user} text="Perfil"/>
           </SideBar>
         <ScrollProvider>
