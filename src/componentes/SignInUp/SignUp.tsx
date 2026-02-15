@@ -27,7 +27,8 @@ export const SignUp = () => {
             const cadastro = await signUp(email,senha,nome)
             navegar(`/email_confirmar/${(cadastro.user?.email)?.toString()}`)
         } catch(erro){
-            console.log("Erro no signuUp: " + erro);
+            console.log(erro);
+            setErro("Erro ao cadastrar, tente novamente")
         }finally{
             setLoading(false)
         }

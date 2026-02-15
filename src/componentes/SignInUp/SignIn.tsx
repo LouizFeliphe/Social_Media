@@ -22,7 +22,8 @@ export const SignIn = () => {
             await signInWithEmail(email, senha)
             setLoading(false)
         } catch (erro) {
-            console.log("Erro no signIn: " + erro);
+            console.log(erro);
+            setErro("Email ou senha incorretos")
         } finally {
             setLoading(false)
         }
