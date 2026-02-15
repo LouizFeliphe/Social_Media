@@ -5,5 +5,6 @@ Tecnologias Utilizadas
 - TailwindCSS
 - TanStack Query (React Query)
 
-A aplicação web foi inspirada no modelo do Twitter (X), desenvolvida com o objetivo de praticar arquitetura frontend moderna. O projeto simula uma rede social baseada na publicação de posts curtos com arquivos mp4 ou imagem (jpeg, png, etc), permitindo que usuários se autentiquem, publiquem conteúdos, mandem mensagens, sigam e editam perfis.
-O banco de dados foi estruturado de maneira um pouco complexa, contendo varias tabelas como posts, usuarios e mensagens. Tudo feito através do SupaBase. Segue o link do projeto: https://social-media-c15s.vercel.app/
+Esta aplicação web foi inspirada no modelo do Twitter (X) e desenvolvida com o objetivo de praticar arquitetura frontend moderna e integração com backend serverless.
+
+O projeto simula uma rede social baseada na publicação de posts curtos, permitindo o envio de conteúdos com arquivos de mídia, como vídeos em formato MP4 e imagens (JPEG, PNG, entre outros). A aplicação também oferece funcionalidades como autenticação de usuários, envio de mensagens privadas, sistema de seguidores e edição de perfil. O banco de dados foi estruturado de forma relacional, contendo múltiplas tabelas, como posts, usuarios e mensagens, organizadas para garantir integridade e escalabilidade. Toda a camada de backend, incluindo autenticação e armazenamento de dados, foi implementada utilizando o Supabase.
